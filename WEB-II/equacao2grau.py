@@ -4,7 +4,7 @@ b = float(input("Digite valo de b:"))
 c = float(input("Digite valo de c:"))
 
 if a == 0:
-    print("Equação do segundo grau a é diferente de 0")
+    print("Não é equação de segundo grau, a deve ser diferente de 0")
 else:
     delta = b*b-(4*a*c)
 
