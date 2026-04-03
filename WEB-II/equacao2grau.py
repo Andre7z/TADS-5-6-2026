@@ -1,7 +1,7 @@
-print ("Equação de Segundo Grau")
-a = float(input("Digite valo de a:"))
-b = float(input("Digite valo de b:"))
-c = float(input("Digite valo de c:"))
+print("Equação de Segundo Grau")
+a = float(input("Digite valor de a: "))
+b = float(input("Digite valor de b: "))
+c = float(input("Digite valor de c: "))
 
 if a == 0:
     print("Não é equação de segundo grau, a deve ser diferente de 0")
@@ -17,4 +17,4 @@ else:
         x= (-b)/(2*a)
         print(f"x = {x:.2f} (Delta igual a zero)")
     else:
-        print ("Erro: Delta < 0")
+        print("Não há raízes reais, Delta < 0")
