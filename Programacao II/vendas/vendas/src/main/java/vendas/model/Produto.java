@@ -8,6 +8,9 @@ public class Produto {
     private double qtde_estoque;
     private Categoria Categoria;
     private List<FornecedorProduto> produtos;
+
+    public Produto(){}
+
     public int getId() {
         return id;
     }

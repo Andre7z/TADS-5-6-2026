@@ -15,6 +15,8 @@ public class Categoria {
     public void setNome(String nome) {
         this.nome = nome;
     }
+
+    public Categoria(){}
     public Categoria(int id, String nome) {
         this.id = id;
         this.nome = nome;

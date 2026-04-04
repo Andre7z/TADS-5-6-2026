@@ -3,12 +3,15 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class Venda {
-
+    
     private int id;
     private LocalDate data_venda;
     private double valor_total;
     private List<ItemVenda> itens;
     private Cliente cliente;
+
+    public Venda() {}
+    
     public int getId() {
         return id;
     }
@@ -39,6 +42,7 @@ public class Venda {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
     }
+
     public Venda(int id, LocalDate data_venda, double valor_total, List<ItemVenda> itens, Cliente cliente) {
         this.id = id;
         this.data_venda = data_venda;
@@ -46,7 +50,6 @@ public class Venda {
         this.itens = itens;
         this.cliente = cliente;
     }
-    
     
 
 }

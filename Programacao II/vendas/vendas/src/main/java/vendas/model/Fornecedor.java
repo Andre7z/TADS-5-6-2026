@@ -5,6 +5,9 @@ public class Fornecedor {
     private String nome_fantasia;
     private String razao_social;
     private String cnpj;
+
+    public Fornecedor(){}
+
     public Fornecedor(int id, String nome_fantasia, String razao_social, String cnpj) {
         this.id = id;
         this.nome_fantasia = nome_fantasia;

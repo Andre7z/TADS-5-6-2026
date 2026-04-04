@@ -4,14 +4,14 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 
-public class conexao {
+public class Conexao {
     private static final String URL = "jdbc:postgresql://localhost:5432/vendas";
     private static final String USUARIO = "postgres";
     private static final String SENHA = "2006";
 
     private static Connection connection;
 
-    public static Connection getConnectio() throws SQLException{
+    public static Connection getConnection() throws SQLException{
         if (connection == null || connection.isClosed()){
             connection = DriverManager.getConnection(URL,USUARIO, SENHA);
         }

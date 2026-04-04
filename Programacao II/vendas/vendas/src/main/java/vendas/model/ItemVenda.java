@@ -5,7 +5,7 @@ public class ItemVenda {
     private Venda venda;
     private Produto produto;
     private int quantidade;
-    private double precoUnitario;
+    private double preco_unit;
     public int getId() {
         return id;
     }
@@ -30,18 +30,21 @@ public class ItemVenda {
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
-    public double getPrecoUnitario() {
-        return precoUnitario;
+    public double getPreco_unit() {
+        return preco_unit;
     }
-    public void setPrecoUnitario(double precoUnitario) {
-        this.precoUnitario = precoUnitario;
+    public void setPreco_unit(double preco_unit) {
+        this.preco_unit = preco_unit;
     }
-    public ItemVenda(int id, Venda venda, Produto produto, int quantidade, double precoUnitario) {
+
+    public ItemVenda(){}
+
+    public ItemVenda(int id, Venda venda, Produto produto, int quantidade, double preco_unit) {
         this.id = id;
         this.venda = venda;
         this.produto = produto;
         this.quantidade = quantidade;
-        this.precoUnitario = precoUnitario;
+        this.preco_unit = preco_unit;
     }
 
     
