@@ -1,0 +1,64 @@
+package vendas.controller;
+
+import vendas.dao.FornecedorDAO;
+import vendas.model.Fornecedor;
+
+public class FornecedorController {
+
+    FornecedorDAO fornecedorDAO = new FornecedorDAO();
+
+    // 💾 SALVAR
+    public boolean salvar(Fornecedor fornecedor) {
+
+        if (fornecedor.getNome_fantasia() == null || fornecedor.getNome_fantasia().isEmpty()) {
+            System.out.println("Nome fantasia é obrigatório!");
+            return false;
+        }
+
+        if (fornecedor.getCnpj() == null || fornecedor.getCnpj().isEmpty()) {
+            System.out.println("CNPJ é obrigatório!");
+            return false;
+        }
+
+        return fornecedorDAO.salvar(fornecedor);
+    }
+
+    // 🔄 ALTERAR
+    public boolean alterar(Fornecedor fornecedor) {
+
+        if (fornecedor.getId() <= 0) {
+            System.out.println("ID inválido!");
+            return false;
+        }
+
+        return fornecedorDAO.alterar(fornecedor);
+    }
+
+    // ❌ EXCLUIR
+    public boolean excluir(int id) {
+
+        if (id <= 0) {
+            System.out.println("ID inválido!");
+            return false;
+        }
+
+        return fornecedorDAO.excluir(id);
+    }
+
+    // 🔍 PESQUISAR (por ID)
+    public Fornecedor pesquisar(int id) {
+
+        if (id <= 0) {
+            System.out.println("ID inválido!");
+            return null;
+        }
+
+        Fornecedor fornecedor = fornecedorDAO.pesquisar(id);
+
+        if (fornecedor == null) {
+            System.out.println("Fornecedor não encontrado!");
+        }
+
+        return fornecedor;
+    }
+}

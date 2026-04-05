@@ -68,7 +68,6 @@ public class VendaDAO {
         }
     }
 
-    // 🔄 ALTERAR
     public boolean alterar(Venda venda) {
         try {
             conn = Conexao.getConnection();
