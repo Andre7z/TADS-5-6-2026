@@ -22,6 +22,8 @@ public class FornecedorProduto {
     public void setProduto(Produto produto) {
         this.produto = produto;
     }
+
+    public FornecedorProduto(){}
     public FornecedorProduto(int id, Fornecedor fornecedor, Produto produto) {
         this.id = id;
         this.fornecedor = fornecedor;

@@ -23,23 +23,39 @@ public class VendaController {
         try {
             conn = Conexao.getConnection();
 
-            // 🔴 REGRA 1: limite de vendas para Flávio Vilela
-            if (venda.getCliente().getNome().equalsIgnoreCase("Flávio Vilela")) {
+            int idCliente = venda.getCliente().getId();
 
-                String sqlCheck = "SELECT COUNT(*) FROM venda v "
-                        + "JOIN cliente c ON v.id_cliente = c.id "
-                        + "WHERE c.nome = ?";
+            // 🔴 REGRA 1: limite para Flávio Vilela
+            String sqlNome = "SELECT nome FROM cliente WHERE id = ?";
+            PreparedStatement psNome = conn.prepareStatement(sqlNome);
+            psNome.setInt(1, idCliente);
 
-                PreparedStatement psCheck = conn.prepareStatement(sqlCheck);
-                psCheck.setString(1, "Flávio Vilela");
+            ResultSet rsNome = psNome.executeQuery();
 
-                ResultSet rsCheck = psCheck.executeQuery();
+            if (rsNome.next()) {
 
-                if (rsCheck.next() && rsCheck.getInt(1) >= 3) {
-                    System.out.println("Cliente Flávio Vilela atingiu limite de vendas!");
-                    return false;
+                String nome = rsNome.getString("nome");
+
+                if (nome.equalsIgnoreCase("Flávio Vilela")) {
+
+                    String sqlCheck = "SELECT COUNT(*) FROM venda WHERE id_cliente = ?";
+                    PreparedStatement psCheck = conn.prepareStatement(sqlCheck);
+                    psCheck.setInt(1, idCliente);
+
+                    ResultSet rsCheck = psCheck.executeQuery();
+
+                    if (rsCheck.next() && rsCheck.getInt(1) >= 3) {
+                        System.out.println("Cliente Flávio Vilela atingiu limite de vendas!");
+                        return false;
+                    }
+
+                    rsCheck.close();
+                    psCheck.close();
                 }
             }
+
+            rsNome.close();
+            psNome.close();
 
             // 🔴 REGRA 2: validar estoque
             for (ItemVenda item : itens) {
@@ -51,14 +67,20 @@ public class VendaController {
                 ResultSet rsEstoque = psEstoque.executeQuery();
 
                 if (rsEstoque.next()) {
-                    if (rsEstoque.getDouble(1) < item.getQuantidade()) {
+
+                    double estoque = rsEstoque.getDouble("qtde_estoque");
+
+                    if (estoque < item.getQuantidade() || estoque < 1) {
                         System.out.println("Estoque insuficiente para produto ID: " + item.getProduto().getId());
                         return false;
                     }
                 }
+
+                rsEstoque.close();
+                psEstoque.close();
             }
 
-            // 🔴 REGRA 3: calcular total da venda
+            // 🔴 REGRA 3: calcular total
             double total = 0;
 
             for (ItemVenda item : itens) {
@@ -83,6 +105,7 @@ public class VendaController {
                 psUpdate.setInt(2, item.getProduto().getId());
 
                 psUpdate.executeUpdate();
+                psUpdate.close();
             }
 
             System.out.println("Venda realizada com sucesso!");
@@ -97,41 +120,41 @@ public class VendaController {
     }
 
     public boolean salvar(Venda venda) {
-    try {
-        vendaDAO.salvar(venda);
-        return true;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
+        try {
+            vendaDAO.salvar(venda);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
-public boolean alterar(Venda venda) {
-    try {
-        vendaDAO.alterar(venda);
-        return true;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
+    public boolean alterar(Venda venda) {
+        try {
+            vendaDAO.alterar(venda);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
-public boolean excluir(int id) {
-    try {
-        vendaDAO.excluir(id);
-        return true;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
+    public boolean excluir(int id) {
+        try {
+            vendaDAO.excluir(id);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
 
-public Venda pesquisar(int id) {
-    try {
-        return vendaDAO.pesquisar(id);
-    } catch (Exception e) {
-        e.printStackTrace();
-        return null;
+    public Venda pesquisar(int id) {
+        try {
+            return vendaDAO.pesquisar(id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-}
 }

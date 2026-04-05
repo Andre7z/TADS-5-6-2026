@@ -126,6 +126,7 @@ public class CategoriaView {
         if (c != null) {
             System.out.println("\n--- DADOS DO Categoria ---");
             System.out.println("ID: " + c.getId());
+            System.out.println("Nome: " + c.getNome());
     } else {
             System.out.println("Cliente não encontrado!");
         }

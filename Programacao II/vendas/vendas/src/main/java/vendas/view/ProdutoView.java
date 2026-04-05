@@ -1,8 +1,13 @@
 package vendas.view;
 
 import java.util.Scanner;
+
 import vendas.controller.ProdutoController;
 import vendas.model.Produto;
+import vendas.model.Categoria;
+import vendas.model.Fornecedor;
+import vendas.model.FornecedorProduto;
+import vendas.dao.FornecedorProdutoDAO;
 
 public class ProdutoView {
 
@@ -26,29 +31,12 @@ public class ProdutoView {
             sc.nextLine();
 
             switch (opcao) {
-
-                case 1:
-                    cadastrar();
-                    break;
-
-                case 2:
-                    alterar();
-                    break;
-
-                case 3:
-                    excluir();
-                    break;
-
-                case 4:
-                    pesquisar();
-                    break;
-
-                case 0:
-                    System.out.println("Voltando...");
-                    break;
-
-                default:
-                    System.out.println("Opção inválida!");
+                case 1: cadastrar(); break;
+                case 2: alterar(); break;
+                case 3: excluir(); break;
+                case 4: pesquisar(); break;
+                case 0: System.out.println("Voltando..."); break;
+                default: System.out.println("Opção inválida!");
             }
 
         } while (opcao != 0);
@@ -66,20 +54,42 @@ public class ProdutoView {
         sc.nextLine();
 
         System.out.print("qtde_estoque em estoque: ");
-        p.setQtde_estoque(sc.nextInt());
+        p.setQtde_estoque(sc.nextDouble());
         sc.nextLine();
+
+        System.out.print("ID da Categoria: ");
+        int idCat = sc.nextInt();
+        sc.nextLine();
+
+        Categoria cat = new Categoria();
+        cat.setId(idCat);
+        p.setCategoria(cat);
 
         boolean sucesso = controller.salvar(p);
 
         if (sucesso) {
-            System.out.println("Produto cadastrado com sucesso!");
+
+            System.out.print("ID do fornecedor: ");
+            int idForn = sc.nextInt();
+            sc.nextLine();
+
+            Fornecedor f = new Fornecedor();
+            f.setId(idForn);
+
+            FornecedorProduto fp = new FornecedorProduto();
+            fp.setFornecedor(f);
+            fp.setProduto(p);
+
+            FornecedorProdutoDAO fpDAO = new FornecedorProdutoDAO();
+            fpDAO.salvar(fp);
+
+            System.out.println("Produto cadastrado com fornecedor!");
         } else {
             System.out.println("Erro ao cadastrar produto!");
         }
     }
 
     private void alterar() {
-
         System.out.print("ID do produto: ");
         int id = sc.nextInt();
         sc.nextLine();
@@ -87,8 +97,6 @@ public class ProdutoView {
         Produto p = controller.pesquisar(id);
 
         if (p != null) {
-
-            System.out.println("\n--- ALTERANDO PRODUTO ---");
 
             System.out.print("Nome (" + p.getNome() + "): ");
             String nome = sc.nextLine();
@@ -100,54 +108,64 @@ public class ProdutoView {
             if (preco >= 0) p.setPreco(preco);
 
             System.out.print("qtde_estoque (" + p.getQtde_estoque() + "): ");
-            int qtd = sc.nextInt();
+            double qtd = sc.nextDouble();
             sc.nextLine();
             if (qtd >= 0) p.setQtde_estoque(qtd);
 
-            boolean sucesso = controller.alterar(p);
+            System.out.print("ID Categoria: ");
+            int idCat = sc.nextInt();
+            sc.nextLine();
 
-            if (sucesso) {
-                System.out.println("Produto alterado com sucesso!");
-            } else {
-                System.out.println("Erro ao alterar produto!");
-            }
+            Categoria cat = new Categoria();
+            cat.setId(idCat);
+            p.setCategoria(cat);
 
+            controller.alterar(p);
+
+            System.out.println("Produto alterado!");
         } else {
             System.out.println("Produto não encontrado!");
         }
     }
 
     private void excluir() {
-
         System.out.print("ID: ");
         int id = sc.nextInt();
         sc.nextLine();
 
-        boolean sucesso = controller.excluir(id);
-
-        if (sucesso) {
-            System.out.println("Produto excluído com sucesso!");
-        } else {
-            System.out.println("Erro ao excluir produto!");
-        }
+        controller.excluir(id);
     }
 
     private void pesquisar() {
 
-        System.out.print("ID: ");
-        int id = sc.nextInt();
-        sc.nextLine();
+    System.out.print("ID: ");
+    int id = sc.nextInt();
+    sc.nextLine();
 
-        Produto p = controller.pesquisar(id);
+    Produto p = controller.pesquisar(id);
 
-        if (p != null) {
-            System.out.println("\n--- DADOS DO PRODUTO ---");
-            System.out.println("ID: " + p.getId());
-            System.out.println("Nome: " + p.getNome());
-            System.out.println("Preço: " + p.getPreco());
-            System.out.println("qtde_estoque em estoque: " + p.getQtde_estoque());
+    if (p != null) {
+        System.out.println("\n--- DADOS DO PRODUTO ---");
+        System.out.println("ID: " + p.getId());
+        System.out.println("Nome: " + p.getNome());
+        System.out.println("Preço: " + p.getPreco());
+        System.out.println("Estoque: " + p.getQtde_estoque());
+        System.out.println("Categoria: " + p.getCategoria().getId());
+
+        if (p.getFornecedores() != null && !p.getFornecedores().isEmpty()) {
+
+            System.out.println("Fornecedores:");
+
+            for (Fornecedor f : p.getFornecedores()) {
+                System.out.println("ID: " + f.getId() + " - " + f.getNome_fantasia());
+            }
+
         } else {
-            System.out.println("Produto não encontrado!");
+            System.out.println("Sem fornecedores cadastrados.");
         }
+
+    } else {
+        System.out.println("Produto não encontrado!");
     }
+}
 }

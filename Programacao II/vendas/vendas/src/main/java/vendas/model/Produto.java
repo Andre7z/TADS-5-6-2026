@@ -1,4 +1,5 @@
 package vendas.model;
+
 import java.util.List;
 
 public class Produto {
@@ -6,8 +7,8 @@ public class Produto {
     private String nome;
     private double preco;
     private double qtde_estoque;
-    private Categoria Categoria;
-    private List<FornecedorProduto> produtos;
+    private Categoria categoria;
+    private List<Fornecedor> fornecedores;
 
     public Produto(){}
 
@@ -36,25 +37,15 @@ public class Produto {
         this.qtde_estoque = qtde_estoque;
     }
     public Categoria getCategoria() {
-        return Categoria;
+        return categoria;
     }
     public void setCategoria(Categoria categoria) {
-        Categoria = categoria;
+        this.categoria = categoria;
     }
-    public List<FornecedorProduto> getProdutos() {
-        return produtos;
+    public List<Fornecedor> getFornecedores() {
+        return fornecedores;
     }
-    public void setProdutos(List<FornecedorProduto> produtos) {
-        this.produtos = produtos;
+    public void setFornecedores(List<Fornecedor> fornecedores) {
+        this.fornecedores = fornecedores;
     }
-    public Produto(int id, String nome, double preco, double qtde_estoque, vendas.model.Categoria categoria,
-            List<FornecedorProduto> produtos) {
-        this.id = id;
-        this.nome = nome;
-        this.preco = preco;
-        this.qtde_estoque = qtde_estoque;
-        this.Categoria = categoria;
-        this.produtos = produtos;
-    }
-    
 }
