@@ -7,7 +7,6 @@ public class FornecedorController {
 
     FornecedorDAO fornecedorDAO = new FornecedorDAO();
 
-    // 💾 SALVAR
     public boolean salvar(Fornecedor fornecedor) {
 
         if (fornecedor.getNome_fantasia() == null || fornecedor.getNome_fantasia().isEmpty()) {
@@ -23,7 +22,6 @@ public class FornecedorController {
         return fornecedorDAO.salvar(fornecedor);
     }
 
-    // 🔄 ALTERAR
     public boolean alterar(Fornecedor fornecedor) {
 
         if (fornecedor.getId() <= 0) {
@@ -34,7 +32,6 @@ public class FornecedorController {
         return fornecedorDAO.alterar(fornecedor);
     }
 
-    // ❌ EXCLUIR
     public boolean excluir(int id) {
 
         if (id <= 0) {
@@ -45,7 +42,6 @@ public class FornecedorController {
         return fornecedorDAO.excluir(id);
     }
 
-    // 🔍 PESQUISAR (por ID)
     public Fornecedor pesquisar(int id) {
 
         if (id <= 0) {

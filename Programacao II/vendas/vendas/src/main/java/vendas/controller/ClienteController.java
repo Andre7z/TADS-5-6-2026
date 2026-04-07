@@ -7,7 +7,6 @@ public class ClienteController {
 
     ClienteDAO clienteDAO = new ClienteDAO();
 
-    // 💾 SALVAR
     public boolean salvar(Cliente cliente) {
 
         if (cliente.getNome() == null || cliente.getNome().isEmpty()) {
@@ -18,7 +17,6 @@ public class ClienteController {
         return clienteDAO.salvar(cliente);
     }
 
-    // 🔄 ALTERAR
     public boolean alterar(Cliente cliente) {
 
         if (cliente.getId() <= 0) {
@@ -29,7 +27,6 @@ public class ClienteController {
         return clienteDAO.alterar(cliente);
     }
 
-    // ❌ EXCLUIR
     public boolean excluir(int id) {
 
         if (id <= 0) {

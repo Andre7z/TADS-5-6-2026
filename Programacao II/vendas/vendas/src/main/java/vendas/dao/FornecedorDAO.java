@@ -94,7 +94,7 @@ public Fornecedor pesquisar(int id) {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            fornecedor = new Fornecedor(); // 🔥 precisa do new
+            fornecedor = new Fornecedor();
 
             fornecedor.setId(rs.getInt("id"));
             fornecedor.setNome_fantasia(rs.getString("nome_fantasia"));

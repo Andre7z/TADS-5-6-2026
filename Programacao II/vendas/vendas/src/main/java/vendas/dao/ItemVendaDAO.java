@@ -14,7 +14,6 @@ public class ItemVendaDAO {
 
     Connection conn = null;
 
-    // 💾 SALVAR
     public boolean salvar(ItemVenda item) {
         try {
             conn = Conexao.getConnection();
@@ -41,7 +40,6 @@ public class ItemVendaDAO {
         }
     }
 
-    // ❌ EXCLUIR
     public boolean excluir(int id) {
         try {
             conn = Conexao.getConnection();
@@ -65,7 +63,7 @@ public class ItemVendaDAO {
         }
     }
 
-    // 🔄 ALTERAR
+
     public boolean alterar(ItemVenda item) {
         try {
             conn = Conexao.getConnection();
@@ -91,7 +89,6 @@ public class ItemVendaDAO {
         }
     }
 
-    // 🔍 BUSCAR POR ID
     public ItemVenda pesquisar(int id) {
         ItemVenda item = null;
 
@@ -106,17 +103,15 @@ public class ItemVendaDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                item = new ItemVenda(); // 🔥 aqui usa new
+                item = new ItemVenda();
 
                 item.setId(rs.getInt("id"));
                 item.setQuantidade(rs.getInt("quantidade"));
                 item.setPreco_unit(rs.getDouble("preco_unit"));
 
-                // 🔥 Produto
                 Produto p = new Produto();
                 p.setId(rs.getInt("id_produto"));
 
-                // 🔥 Venda
                 Venda v = new Venda();
                 v.setId(rs.getInt("id_venda"));
 
@@ -136,7 +131,6 @@ public class ItemVendaDAO {
         return item;
     }
 
-    // 🔥 LISTAR ITENS POR VENDA (MUITO IMPORTANTE)
     public List<ItemVenda> listarPorVenda(int idVenda) {
         List<ItemVenda> lista = new ArrayList<>();
 
@@ -151,7 +145,7 @@ public class ItemVendaDAO {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-                ItemVenda item = new ItemVenda(); // 🔥 aqui também
+                ItemVenda item = new ItemVenda(); 
 
                 item.setId(rs.getInt("id"));
                 item.setQuantidade(rs.getInt("quantidade"));

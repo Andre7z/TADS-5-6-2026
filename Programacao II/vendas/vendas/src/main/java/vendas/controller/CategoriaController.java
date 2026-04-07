@@ -7,7 +7,6 @@ public class CategoriaController {
 
     CategoriaDAO categoriaDAO = new CategoriaDAO();
 
-    // 💾 SALVAR
     public boolean salvar(Categoria categoria) {
 
         if (categoria.getNome() == null || categoria.getNome().isEmpty()) {
@@ -18,7 +17,6 @@ public class CategoriaController {
         return categoriaDAO.salvar(categoria);
     }
 
-    // 🔄 ALTERAR
     public boolean alterar(Categoria categoria) {
 
         if (categoria.getId() <= 0) {
@@ -29,7 +27,6 @@ public class CategoriaController {
         return categoriaDAO.alterar(categoria);
     }
 
-    // ❌ EXCLUIR
     public boolean excluir(int id) {
 
         if (id <= 0) {
@@ -40,7 +37,6 @@ public class CategoriaController {
         return categoriaDAO.excluir(id);
     }
 
-    // 🔍 PESQUISAR (por ID)
     public Categoria pesquisar(int id) {
 
         if (id <= 0) {

@@ -12,7 +12,6 @@ public class VendaDAO {
 
     Connection conn = null;
 
-    // 💾 SALVAR
     public boolean salvar(Venda venda) {
         try {
             conn = Conexao.getConnection();
@@ -44,7 +43,6 @@ public class VendaDAO {
         }
     }
 
-    // ❌ EXCLUIR
     public boolean excluir(int id) {
         try {
             conn = Conexao.getConnection();

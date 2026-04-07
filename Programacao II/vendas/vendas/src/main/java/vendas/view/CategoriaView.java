@@ -53,7 +53,7 @@ public class CategoriaView {
         } while (opcao != 0);
     }
 
-    // 💾 CADASTRAR
+
     private void cadastrar() {
 
         Categoria c = new Categoria();
@@ -114,7 +114,6 @@ public class CategoriaView {
         }
     }
 
-    // 🔍 PESQUISAR
     private void pesquisar() {
 
         System.out.print("ID: ");

@@ -7,7 +7,6 @@ public class ProdutoController {
 
     ProdutoDAO produtoDAO = new ProdutoDAO();
 
-    // 💾 SALVAR
     public boolean salvar(Produto produto) {
 
         if (produto.getNome() == null || produto.getNome().isEmpty()) {
@@ -33,7 +32,6 @@ public class ProdutoController {
         return produtoDAO.salvar(produto);
     }
 
-    // 🔄 ALTERAR
     public boolean alterar(Produto produto) {
 
         if (produto.getId() <= 0) {
@@ -44,7 +42,6 @@ public class ProdutoController {
         return produtoDAO.alterar(produto);
     }
 
-    // ❌ EXCLUIR
     public boolean excluir(int id) {
 
         if (id <= 0) {
@@ -55,7 +52,6 @@ public class ProdutoController {
         return produtoDAO.excluir(id);
     }
 
-    // 🔍 PESQUISAR (por ID)
     public Produto pesquisar(int id) {
 
         if (id <= 0) {

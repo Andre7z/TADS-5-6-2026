@@ -25,7 +25,6 @@ public class VendaController {
 
             int idCliente = venda.getCliente().getId();
 
-            // 🔴 REGRA 1: limite para Flávio Vilela
             String sqlNome = "SELECT nome FROM cliente WHERE id = ?";
             PreparedStatement psNome = conn.prepareStatement(sqlNome);
             psNome.setInt(1, idCliente);
@@ -57,7 +56,6 @@ public class VendaController {
             rsNome.close();
             psNome.close();
 
-            // 🔴 REGRA 2: validar estoque
             for (ItemVenda item : itens) {
 
                 String sqlEstoque = "SELECT qtde_estoque FROM produto WHERE id=?";
@@ -80,7 +78,6 @@ public class VendaController {
                 psEstoque.close();
             }
 
-            // 🔴 REGRA 3: calcular total
             double total = 0;
 
             for (ItemVenda item : itens) {
@@ -89,10 +86,8 @@ public class VendaController {
 
             venda.setValor_total(total);
 
-            // 🔴 salvar venda
             vendaDAO.salvar(venda);
 
-            // 🔴 salvar itens + atualizar estoque
             for (ItemVenda item : itens) {
 
                 item.setVenda(venda);

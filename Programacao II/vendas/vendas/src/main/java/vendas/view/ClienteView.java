@@ -55,7 +55,6 @@ public class ClienteView {
         } while (opcao != 0);
     }
 
-    // 💾 CADASTRAR
     private void cadastrar() {
 
         Cliente c = new Cliente();
@@ -84,7 +83,6 @@ public class ClienteView {
         }
     }
 
-    // 🔄 ALTERAR
     private void alterar() {
 
         System.out.print("ID do cliente: ");
@@ -130,7 +128,6 @@ public class ClienteView {
         }
     }
 
-    // ❌ EXCLUIR
     private void excluir() {
 
         System.out.print("ID: ");
@@ -145,8 +142,7 @@ public class ClienteView {
             System.out.println("Erro ao excluir cliente!");
         }
     }
-
-    // 🔍 PESQUISAR
+    
     private void pesquisar() {
 
         System.out.print("ID: ");

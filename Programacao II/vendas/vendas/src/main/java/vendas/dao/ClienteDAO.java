@@ -9,7 +9,6 @@ public class ClienteDAO {
 
     Connection conn = null;
 
-    // 💾 SALVAR
     public boolean salvar(Cliente cliente) {
         try {
             conn = Conexao.getConnection();
@@ -37,7 +36,6 @@ public class ClienteDAO {
         }
     }
 
-    // ❌ EXCLUIR
     public boolean excluir(int id) {
         try {
             conn = Conexao.getConnection();
@@ -61,7 +59,6 @@ public class ClienteDAO {
         }
     }
 
-    // 🔄 ALTERAR
     public boolean alterar(Cliente cliente) {
         try {
             conn = Conexao.getConnection();
