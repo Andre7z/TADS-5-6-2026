@@ -1,0 +1,25 @@
+{
+    "sqltools.connections": [
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "vendas",
+            "username": "postgres",
+            "database": "vendas"
+        },
+        {
+            "ssh": "Disabled",
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "avaliacao1",
+            "database": "avaliacao1",
+            "username": "postgres"
+        }
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive"
+}

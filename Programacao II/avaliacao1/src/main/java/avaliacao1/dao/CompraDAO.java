@@ -5,34 +5,34 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import avaliacao1.model.Cliente;
-import avaliacao1.model.Venda;
+import avaliacao1.model.Fornecedor;
+import avaliacao1.model.Compra;
 
-public class VendaDAO {
+public class CompraDAO {
 
     Connection conn = null;
 
-    public boolean salvar(Venda venda) {
+    public boolean salvar(Compra Compra) {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "INSERT INTO venda (data_venda, valor_total, id_cliente) VALUES (?, ?, ?) RETURNING id";
+            String sql = "INSERT INTO Compra (data_Compra, valor_total, id_Fornecedor) VALUES (?, ?, ?) RETURNING id";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setDate(1, Date.valueOf(venda.getData_venda()));
-            ps.setDouble(2, venda.getValor_total());
-            ps.setInt(3, venda.getCliente().getId());
+            ps.setDate(1, Date.valueOf(Compra.getData_compra()));
+            ps.setDouble(2, Compra.getValor_total());
+            ps.setInt(3, Compra.getFornecedor().getId());
 
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                venda.setId(rs.getInt("id")); 
+                Compra.setId(rs.getInt("id")); 
             }
 
             rs.close();
             ps.close();
 
-            System.out.println("Venda salva com sucesso!");
+            System.out.println("Compra salva com sucesso!");
             return true;
 
         } catch (Exception e) {
@@ -47,7 +47,7 @@ public class VendaDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "DELETE FROM venda WHERE id = ?";
+            String sql = "DELETE FROM Compra WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, id);
@@ -55,7 +55,7 @@ public class VendaDAO {
             ps.executeUpdate();
             ps.close();
 
-            System.out.println("Venda excluída com sucesso!");
+            System.out.println("Compra excluída com sucesso!");
             return true;
 
         } catch (Exception e) {
@@ -66,22 +66,22 @@ public class VendaDAO {
         }
     }
 
-    public boolean alterar(Venda venda) {
+    public boolean alterar(Compra Compra) {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "UPDATE venda SET dt_venda=?, valor_total=?, id_cliente=? WHERE id=?";
+            String sql = "UPDATE Compra SET dt_Compra=?, valor_total=?, id_Fornecedor=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setDate(1, Date.valueOf(venda.getData_venda()));
-            ps.setDouble(2, venda.getValor_total());
-            ps.setInt(3, venda.getCliente().getId());
-            ps.setInt(4, venda.getId());
+            ps.setDate(1, Date.valueOf(Compra.getData_compra()));
+            ps.setDouble(2, Compra.getValor_total());
+            ps.setInt(3, Compra.getFornecedor().getId());
+            ps.setInt(4, Compra.getId());
 
             ps.executeUpdate();
             ps.close();
 
-            System.out.println("Venda alterada com sucesso!");
+            System.out.println("Compra alterada com sucesso!");
             return true;
 
         } catch (Exception e) {
@@ -92,29 +92,29 @@ public class VendaDAO {
         }
     }
 
-   public Venda pesquisar(int id) {
-    Venda venda = null;
+   public Compra pesquisar(int id) {
+    Compra Compra = null;
 
     try {
         conn = Conexao.getConnection();
 
-        String sql = "SELECT * FROM venda WHERE id=?";
+        String sql = "SELECT * FROM Compra WHERE id=?";
         PreparedStatement ps = conn.prepareStatement(sql);
         ps.setInt(1, id);
 
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            venda = new Venda();
+            Compra = new Compra();
 
-            venda.setId(rs.getInt("id"));
-            venda.setData_venda(rs.getDate("dt_venda").toLocalDate());
-            venda.setValor_total(rs.getDouble("valor_total"));
+            Compra.setId(rs.getInt("id"));
+            Compra.setData_compra(rs.getDate("dt_Compra").toLocalDate());
+            Compra.setValor_total(rs.getDouble("valor_total"));
             
-            Cliente c = new Cliente();
-            c.setId(rs.getInt("id_cliente"));
+            Fornecedor f = new Fornecedor();
+            f.setId(rs.getInt("id_Fornecedor"));
 
-            venda.setCliente(c);
+            Compra.setFornecedor(f);
         }
 
         rs.close();
@@ -126,6 +126,6 @@ public class VendaDAO {
         Conexao.fecharConexao();
     }
 
-    return venda;
+    return Compra;
 }
 }

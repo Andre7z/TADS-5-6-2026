@@ -4,6 +4,8 @@ import avaliacao1.model.Cliente;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClienteDAO {
 
@@ -22,12 +24,9 @@ public class ClienteDAO {
             ps.setString(4, cliente.getEndereco());
             ps.setString(5, cliente.getTelefone());
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
-
-            System.out.println("Cliente salvo com sucesso!");
-            return true;
-
+            return qtdeLinhas > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -45,11 +44,9 @@ public class ClienteDAO {
 
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
-
-            System.out.println("Cliente excluído com sucesso!");
-            return true;
+            return qtdeLinhas > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,12 +70,10 @@ public class ClienteDAO {
             ps.setString(5, cliente.getTelefone());
             ps.setInt(6, cliente.getId());
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
 
-            System.out.println("Cliente alterado com sucesso!");
-            return true;
-
+            return qtdeLinhas > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -87,37 +82,39 @@ public class ClienteDAO {
         }
     }
 
-public Cliente pesquisar(int id) {
-    Cliente cliente = null;
+    public List<Cliente> pesquisarTodos() {
 
-    try {
-        conn = Conexao.getConnection();
+        try {
+            List<Cliente> clientes = new ArrayList<>();
+            conn = Conexao.getConnection();
 
-        String sql = "SELECT * FROM cliente WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, id);
+            String sql = "SELECT * FROM cliente WHERE id=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-        ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            cliente = new Cliente();
-            cliente.setId(rs.getInt("id"));
-            cliente.setNome(rs.getString("nome"));
-            cliente.setCpf(rs.getString("cpf"));
-            cliente.setRg(rs.getString("rg"));
-            cliente.setEndereco(rs.getString("endereco"));
-            cliente.setTelefone(rs.getString("telefone"));
+            if (rs.next()) {
+                Cliente cliente = new Cliente();
+
+                cliente = new Cliente();
+                cliente.setId(rs.getInt("id"));
+                cliente.setNome(rs.getString("nome"));
+                cliente.setCpf(rs.getString("cpf"));
+                cliente.setRg(rs.getString("rg"));
+                cliente.setEndereco(rs.getString("endereco"));
+                cliente.setTelefone(rs.getString("telefone"));
+
+                clientes.add(cliente);
+            }
+            rs.close();
+            ps.close();
+            return clientes;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Conexao.fecharConexao();
         }
-
-        rs.close();
-        ps.close();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        Conexao.fecharConexao();
     }
-
-    return cliente;
-}
 }

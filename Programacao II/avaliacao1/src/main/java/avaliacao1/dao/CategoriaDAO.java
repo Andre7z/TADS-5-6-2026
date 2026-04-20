@@ -1,9 +1,12 @@
 package avaliacao1.dao;
 
 import avaliacao1.model.Categoria;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CategoriaDAO {
 
@@ -18,11 +21,9 @@ public class CategoriaDAO {
 
             ps.setString(1, categoria.getNome());
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
-
-            System.out.println("Categoria salva com sucesso!");
-            return true;
+            return qtdeLinhas > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -40,11 +41,10 @@ public class CategoriaDAO {
 
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
+            return qtdeLinhas > 0;
 
-            System.out.println("Cliente excluído com sucesso!");
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -57,17 +57,16 @@ public class CategoriaDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "UPDATE categoria SET nome=?";
+            String sql = "UPDATE categoria SET nome=? WHERE ID = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setString(1, categoria.getNome());
+            ps.setInt(2,categoria.getId());
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
 
-            System.out.println("Cliente alterado com sucesso!");
-            return true;
-
+            return qtdeLinhas > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -76,33 +75,35 @@ public class CategoriaDAO {
         }
     }
 
-    public Categoria pesquisar(int id) {
-    Categoria categoria = null;
+    public List<Categoria> pesquisarTodos() {
+        try {
+            List<Categoria> categorias = new ArrayList<>();
 
-    try {
-        conn = Conexao.getConnection();
+            conn = Conexao.getConnection();
 
-        String sql = "SELECT * FROM categoria WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, id);
+            String sql = "SELECT * FROM categoria";
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-        ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            categoria = new Categoria();
-            categoria.setId(rs.getInt("id"));
-            categoria.setNome(rs.getString("nome"));
+            while (rs.next()) {
+                Categoria categoria = new Categoria();
+
+                categoria.setId(rs.getInt("id"));
+                categoria.setNome(rs.getString("nome"));
+
+                categorias.add(categoria);
+            }
+
+            rs.close();
+            ps.close();
+            return categorias;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Conexao.fecharConexao();
         }
-
-        rs.close();
-        ps.close();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        Conexao.fecharConexao();
     }
-
-    return categoria;
-}
 }

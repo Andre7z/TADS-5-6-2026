@@ -8,7 +8,6 @@ public class CategoriaController {
     CategoriaDAO categoriaDAO = new CategoriaDAO();
 
     public boolean salvar(Categoria categoria) {
-
         if (categoria.getNome() == null || categoria.getNome().isEmpty()) {
             System.out.println("Nome da categoria é obrigatório!");
             return false;
