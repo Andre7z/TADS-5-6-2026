@@ -23,9 +23,9 @@ public class FornecedorProdutoDAO {
             ps.executeUpdate();
             ps.close();
 
-            System.out.println("Relacionamento salvo!");
-            return true;
-
+            int qtdeLinhas = ps.executeUpdate();
+            ps.close();
+            return qtdeLinhas > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

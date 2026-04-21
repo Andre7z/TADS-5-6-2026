@@ -27,10 +27,8 @@ public class ProdutoDAO {
             ps.setDouble(6, produto.getValor_ultima_venda());
 
             int qtdeLinhas = ps.executeUpdate();
-
             ps.close();
             return qtdeLinhas > 0;
-
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -39,7 +37,7 @@ public class ProdutoDAO {
         }
     }
 
-        public boolean excluir(int id) {
+    public boolean excluir(int id) {
         try {
             conn = Conexao.getConnection();
 

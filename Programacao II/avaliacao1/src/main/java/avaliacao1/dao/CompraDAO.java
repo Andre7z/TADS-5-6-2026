@@ -23,8 +23,8 @@ public class CompraDAO {
             ps.setDouble(2, Compra.getValor_total());
             ps.setInt(3, Compra.getFornecedor().getId());
 
-            ResultSet rs = ps.executeQuery();
-
+            int qtdeLinhas = ps.executeUpdate();
+            
             if (rs.next()) {
                 Compra.setId(rs.getInt("id")); 
             }

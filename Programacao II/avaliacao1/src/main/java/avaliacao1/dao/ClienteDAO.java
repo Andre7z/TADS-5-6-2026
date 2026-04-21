@@ -93,7 +93,7 @@ public class ClienteDAO {
 
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
+            while (rs.next()) {
                 Cliente cliente = new Cliente();
 
                 cliente = new Cliente();

@@ -3,6 +3,8 @@ package avaliacao1.dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 import avaliacao1.model.Fornecedor;
 
@@ -20,11 +22,9 @@ public class FornecedorDAO {
             ps.setString(2, fornecedor.getRazao_social());
             ps.setString(3, fornecedor.getCnpj());
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
-
-            System.out.println("fornecedor salva com sucesso!");
-            return true;
+            return qtdeLinhas > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -42,11 +42,10 @@ public class FornecedorDAO {
 
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
+            return qtdeLinhas > 0;
 
-            System.out.println("Cliente excluído com sucesso!");
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -54,6 +53,7 @@ public class FornecedorDAO {
             Conexao.fecharConexao();
         }
     }
+
 
     public boolean alterar(Fornecedor fornecedor) {
         try {
@@ -66,12 +66,10 @@ public class FornecedorDAO {
             ps.setString(2, fornecedor.getRazao_social());
             ps.setString(3, fornecedor.getCnpj());
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
 
-            System.out.println("Cliente alterado com sucesso!");
-            return true;
-
+            return qtdeLinhas > 0;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -80,37 +78,36 @@ public class FornecedorDAO {
         }
     }
 
-public Fornecedor pesquisar(int id) {
-    Fornecedor fornecedor = null;
+    public List<Fornecedor> pesquisarTodos() {
+        try {
+            List<Fornecedor> fornecedores = new ArrayList<>();
 
-    try {
-        conn = Conexao.getConnection();
+            conn = Conexao.getConnection();
 
-        String sql = "SELECT * FROM fornecedor WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
+            String sql = "SELECT * FROM fornecedor WHERE id=?";
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-        ps.setInt(1, id);
+            ResultSet rs = ps.executeQuery();
 
-        ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Fornecedor fornecedor = new Fornecedor();
 
-        if (rs.next()) {
-            fornecedor = new Fornecedor();
+                fornecedor.setId(rs.getInt("id"));
+                fornecedor.setNome_fantasia(rs.getString("nome_fantasia"));
+                fornecedor.setRazao_social(rs.getString("razao_social"));
+                fornecedor.setCnpj(rs.getString("cnpj"));
 
-            fornecedor.setId(rs.getInt("id"));
-            fornecedor.setNome_fantasia(rs.getString("nome_fantasia"));
-            fornecedor.setRazao_social(rs.getString("razao_social"));
-            fornecedor.setCnpj(rs.getString("cnpj"));
+                fornecedores.add(fornecedor);
+            }
+            rs.close();
+            ps.close();
+            return fornecedores;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Conexao.fecharConexao();
         }
-
-        rs.close();
-        ps.close();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        Conexao.fecharConexao();
     }
-
-    return fornecedor;
-}
 }
