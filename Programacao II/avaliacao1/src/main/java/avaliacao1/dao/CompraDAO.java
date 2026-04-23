@@ -1,39 +1,39 @@
 package avaliacao1.dao;
 
+import avaliacao1.model.Compra;
+import avaliacao1.model.Fornecedor;
+
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import avaliacao1.model.Fornecedor;
-import avaliacao1.model.Compra;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompraDAO {
 
     Connection conn = null;
 
-    public boolean salvar(Compra Compra) {
+    public boolean salvar(Compra compra) {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "INSERT INTO Compra (data_Compra, valor_total, id_Fornecedor) VALUES (?, ?, ?) RETURNING id";
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ps.setDate(1, Date.valueOf(Compra.getData_compra()));
-            ps.setDouble(2, Compra.getValor_total());
-            ps.setInt(3, Compra.getFornecedor().getId());
-
-            int qtdeLinhas = ps.executeUpdate();
-            
-            if (rs.next()) {
-                Compra.setId(rs.getInt("id")); 
+            //valida quantidade de Compras do Fornecedor
+            if (!verificaQtdeCompras(compra.getFornecedor().getId())) {
+                System.out.println("Fornecedor já atingiu o limite de Compras!");
+                return false;
             }
 
-            rs.close();
+            String sql = "INSERT INTO compra (data_Compra, valor_total, Fornecedor_id) VALUES (?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setDate(1, java.sql.Date.valueOf(compra.getData_compra()));
+            ps.setDouble(2, compra.getValor_total());
+            ps.setInt(3, compra.getFornecedor().getId());
+
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
 
-            System.out.println("Compra salva com sucesso!");
-            return true;
+            return qtdeLinhas > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,16 +47,15 @@ public class CompraDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "DELETE FROM Compra WHERE id = ?";
+            String sql = "DELETE FROM compra WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, id);
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
 
-            System.out.println("Compra excluída com sucesso!");
-            return true;
+            return qtdeLinhas > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,23 +65,22 @@ public class CompraDAO {
         }
     }
 
-    public boolean alterar(Compra Compra) {
+    public boolean alterar(Compra compra) {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "UPDATE Compra SET dt_Compra=?, valor_total=?, id_Fornecedor=? WHERE id=?";
+            String sql = "UPDATE compra SET data_Compra = ?, valor_total = ?, Fornecedor_id = ? WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setDate(1, Date.valueOf(Compra.getData_compra()));
-            ps.setDouble(2, Compra.getValor_total());
-            ps.setInt(3, Compra.getFornecedor().getId());
-            ps.setInt(4, Compra.getId());
+            ps.setDate(1, java.sql.Date.valueOf(compra.getData_compra()));
+            ps.setDouble(2, compra.getValor_total());
+            ps.setInt(3, compra.getFornecedor().getId());
+            ps.setInt(4, compra.getId());
 
-            ps.executeUpdate();
+            int qtdeLinhas = ps.executeUpdate();
             ps.close();
 
-            System.out.println("Compra alterada com sucesso!");
-            return true;
+            return qtdeLinhas > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,40 +90,72 @@ public class CompraDAO {
         }
     }
 
-   public Compra pesquisar(int id) {
-    Compra Compra = null;
+    public List<Compra> pesquisarTodos() {
+        try {
+            List<Compra> compras = new ArrayList<>();
 
-    try {
-        conn = Conexao.getConnection();
+            conn = Conexao.getConnection();
 
-        String sql = "SELECT * FROM Compra WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, id);
+            String sql = "SELECT * FROM compra";
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-        ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            Compra = new Compra();
+            while (rs.next()) {
+                Compra compra = new Compra();
+                Fornecedor fornecedor = new Fornecedor();
 
-            Compra.setId(rs.getInt("id"));
-            Compra.setData_compra(rs.getDate("dt_Compra").toLocalDate());
-            Compra.setValor_total(rs.getDouble("valor_total"));
-            
-            Fornecedor f = new Fornecedor();
-            f.setId(rs.getInt("id_Fornecedor"));
+                compra.setId(rs.getInt("id"));
+                compra.setData_compra(rs.getDate("data_compra").toLocalDate());
+                compra.setValor_total(rs.getDouble("valor_total"));
 
-            Compra.setFornecedor(f);
+                fornecedor.setId(rs.getInt("fornecedor_id"));
+                compra.setFornecedor(fornecedor);
+
+                compras.add(compra);
+            }
+
+            rs.close();
+            ps.close();
+
+            return compras;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Conexao.fecharConexao();
         }
-
-        rs.close();
-        ps.close();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        Conexao.fecharConexao();
     }
 
-    return Compra;
-}
-}
+    public boolean verificaQtdeCompras(int fornecedorId) {
+        try {
+            conn = Conexao.getConnection();
+            System.out.println("Conectado com sucesso!");
+
+            String sql = "SELECT COUNT(*) AS total FROM compra WHERE Fornecedor_id = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setInt(1, fornecedorId);
+
+            ResultSet rs = ps.executeQuery();
+
+            int qtdeCompras = 0;
+
+            if (rs.next()) {
+                qtdeCompras = rs.getInt("total");
+            }
+
+            rs.close();
+            ps.close();
+
+            return qtdeCompras < 3;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            Conexao.fecharConexao();
+        }
+    }
+} 

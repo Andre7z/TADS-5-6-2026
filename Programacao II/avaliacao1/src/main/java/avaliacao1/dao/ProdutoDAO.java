@@ -1,15 +1,16 @@
 package avaliacao1.dao;
 
+import avaliacao1.model.Produto;
+import avaliacao1.model.Categoria;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import avaliacao1.model.Produto;
-import avaliacao1.model.Categoria;
-
 public class ProdutoDAO {
+
     Connection conn = null;
 
     public boolean salvar(Produto produto) {
@@ -29,6 +30,7 @@ public class ProdutoDAO {
             int qtdeLinhas = ps.executeUpdate();
             ps.close();
             return qtdeLinhas > 0;
+
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -47,7 +49,6 @@ public class ProdutoDAO {
             ps.setInt(1, id);
 
             int qtdeLinhas = ps.executeUpdate();
-
             ps.close();
             return qtdeLinhas > 0;
 
@@ -63,7 +64,7 @@ public class ProdutoDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "UPDATE produto SET nome = ?, preco_medio = ?, qtde_estoque = ?, categoria_id = ?, valor_ultima_compra = ?, valor_ultima_venda = ? WHERE id = ?";
+            String sql = "UPDATE produto SET nome=?, preco_medio=?, qtde_estoque=?, categoria_id=?, valor_ultima_compra=?, valor_ultima_venda=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setString(1, produto.getNome());
@@ -75,7 +76,6 @@ public class ProdutoDAO {
             ps.setInt(7, produto.getId());
 
             int qtdeLinhas = ps.executeUpdate();
-
             ps.close();
             return qtdeLinhas > 0;
 
@@ -87,26 +87,14 @@ public class ProdutoDAO {
         }
     }
 
-    public boolean atualizarEstoque(Produto produto, double quantidade) {
-        Produto existente = pesquisar(produto.getId());
-
-        if (existente == null) {
-            return false;
-        }
-
-        double novaQuantidade = existente.getQtde_estoque() - quantidade;
-        produto.setQtde_estoque(novaQuantidade);
-
-        return alterar(produto);
-    }
-
-    public Produto pesquisar(int idProduto) {
+    public Produto pesquisar(int id) {
         try {
             conn = Conexao.getConnection();
 
             String sql = "SELECT * FROM produto WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setInt(1, idProduto);
+
+            ps.setInt(1, id);
 
             ResultSet rs = ps.executeQuery();
 
@@ -180,5 +168,4 @@ public class ProdutoDAO {
             Conexao.fecharConexao();
         }
     }
-
 }

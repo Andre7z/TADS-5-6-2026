@@ -1,12 +1,14 @@
 package avaliacao1.dao;
 
+import avaliacao1.model.Venda;
+import avaliacao1.model.ProdutoVenda;
+import avaliacao1.model.Cliente;
+
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import avaliacao1.model.Cliente;
-import avaliacao1.model.Venda;
+import java.util.ArrayList;
+import java.util.List;
 
 public class VendaDAO {
 
@@ -16,24 +18,39 @@ public class VendaDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "INSERT INTO venda (data_venda, valor_total, id_cliente) VALUES (?, ?, ?) RETURNING id";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            String sqlVenda = "INSERT INTO venda (data_venda, valor_total, cliente_id) VALUES (?, ?, ?)";
+            PreparedStatement psVenda = conn.prepareStatement(sqlVenda, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            ps.setDate(1, Date.valueOf(venda.getData_venda()));
-            ps.setDouble(2, venda.getValor_total());
-            ps.setInt(3, venda.getCliente().getId());
+            psVenda.setDate(1, java.sql.Date.valueOf(venda.getData_venda()));
+            psVenda.setDouble(2, venda.getValor_total());
+            psVenda.setInt(3, venda.getCliente().getId());
 
-            ResultSet rs = ps.executeQuery();
+            int qtdeLinhas = psVenda.executeUpdate();
+
+            ResultSet rs = psVenda.getGeneratedKeys();
+            int idVenda = 0;
 
             if (rs.next()) {
-                venda.setId(rs.getInt("id")); 
+                idVenda = rs.getInt(1);
             }
 
             rs.close();
-            ps.close();
+            psVenda.close();
 
-            System.out.println("Venda salva com sucesso!");
-            return true;
+            for (ProdutoVenda pv : venda.getprodutos()) {
+                String sqlItem = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
+                PreparedStatement psItem = conn.prepareStatement(sqlItem);
+
+                psItem.setInt(1, idVenda);
+                psItem.setInt(2, pv.getProduto().getId());
+                psItem.setInt(3, pv.getQuantidade());
+                psItem.setDouble(4, pv.getPreco_unit());
+
+                psItem.executeUpdate();
+                psItem.close();
+            }
+
+            return qtdeLinhas > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,16 +64,20 @@ public class VendaDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "DELETE FROM venda WHERE id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            String sqlItens = "DELETE FROM venda_produto WHERE venda_id = ?";
+            PreparedStatement psItens = conn.prepareStatement(sqlItens);
+            psItens.setInt(1, id);
+            psItens.executeUpdate();
+            psItens.close();
 
-            ps.setInt(1, id);
+            String sqlVenda = "DELETE FROM venda WHERE id = ?";
+            PreparedStatement psVenda = conn.prepareStatement(sqlVenda);
+            psVenda.setInt(1, id);
 
-            ps.executeUpdate();
-            ps.close();
+            int qtdeLinhas = psVenda.executeUpdate();
+            psVenda.close();
 
-            System.out.println("Venda excluída com sucesso!");
-            return true;
+            return qtdeLinhas > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -70,19 +91,37 @@ public class VendaDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "UPDATE venda SET dt_venda=?, valor_total=?, id_cliente=? WHERE id=?";
-            PreparedStatement ps = conn.prepareStatement(sql);
+            String sqlVenda = "UPDATE venda SET data_venda = ?, valor_total = ?, cliente_id = ? WHERE id = ?";
+            PreparedStatement psVenda = conn.prepareStatement(sqlVenda);
 
-            ps.setDate(1, Date.valueOf(venda.getData_venda()));
-            ps.setDouble(2, venda.getValor_total());
-            ps.setInt(3, venda.getCliente().getId());
-            ps.setInt(4, venda.getId());
+            psVenda.setDate(1, java.sql.Date.valueOf(venda.getData_venda()));
+            psVenda.setDouble(2, venda.getValor_total());
+            psVenda.setInt(3, venda.getCliente().getId());
+            psVenda.setInt(4, venda.getId());
 
-            ps.executeUpdate();
-            ps.close();
+            int qtdeLinhas = psVenda.executeUpdate();
+            psVenda.close();
 
-            System.out.println("Venda alterada com sucesso!");
-            return true;
+            String deleteItens = "DELETE FROM venda_produto WHERE venda_id = ?";
+            PreparedStatement psDelete = conn.prepareStatement(deleteItens);
+            psDelete.setInt(1, venda.getId());
+            psDelete.executeUpdate();
+            psDelete.close();
+
+            for (ProdutoVenda pv : venda.getprodutos()) {
+                String sqlItem = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
+                PreparedStatement psItem = conn.prepareStatement(sqlItem);
+
+                psItem.setInt(1, venda.getId());
+                psItem.setInt(2, pv.getProduto().getId());
+                psItem.setInt(3, pv.getQuantidade());
+                psItem.setDouble(4, pv.getPreco_unit());
+
+                psItem.executeUpdate();
+                psItem.close();
+            }
+
+            return qtdeLinhas > 0;
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,40 +131,75 @@ public class VendaDAO {
         }
     }
 
-   public Venda pesquisar(int id) {
-    Venda venda = null;
+    public List<Venda> pesquisarTodos() {
+        try {
+            List<Venda> vendas = new ArrayList<>();
 
-    try {
-        conn = Conexao.getConnection();
+            conn = Conexao.getConnection();
 
-        String sql = "SELECT * FROM venda WHERE id=?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, id);
+            String sql = "SELECT * FROM venda";
+            PreparedStatement ps = conn.prepareStatement(sql);
 
-        ResultSet rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            venda = new Venda();
+            while (rs.next()) {
+                Venda venda = new Venda();
 
-            venda.setId(rs.getInt("id"));
-            venda.setData_venda(rs.getDate("dt_venda").toLocalDate());
-            venda.setValor_total(rs.getDouble("valor_total"));
-            
-            Cliente c = new Cliente();
-            c.setId(rs.getInt("id_cliente"));
+                venda.setId(rs.getInt("id"));
+                venda.setData_venda(rs.getDate("data_venda").toLocalDate());
+                venda.setValor_total(rs.getDouble("valor_total"));
 
-            venda.setCliente(c);
+                Cliente cliente = new Cliente();
+                cliente.setId(rs.getInt("cliente_id"));
+                venda.setCliente(cliente);
+
+                vendas.add(venda);
+            }
+
+            rs.close();
+            ps.close();
+            return vendas;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Conexao.fecharConexao();
         }
-
-        rs.close();
-        ps.close();
-
-    } catch (Exception e) {
-        e.printStackTrace();
-    } finally {
-        Conexao.fecharConexao();
     }
 
-    return venda;
-}
+    public int restrigirVendas(String cpf) {
+        try {
+            conn = Conexao.getConnection();
+
+            String sql = "SELECT COUNT(*) FROM venda v " +
+                         "INNER JOIN cliente c ON v.cliente_id = c.id " +
+                         "WHERE c.cpf = ? " +
+                         "AND EXTRACT(MONTH FROM v.data_venda) = EXTRACT(MONTH FROM CURRENT_DATE) " +
+                         "AND EXTRACT(YEAR FROM v.data_venda) = EXTRACT(YEAR FROM CURRENT_DATE)";
+
+            PreparedStatement ps = conn.prepareStatement(sql);
+
+            ps.setString(1, cpf);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                int total = rs.getInt(1);
+                rs.close();
+                ps.close();
+                return total;
+            }
+
+            rs.close();
+            ps.close();
+            return 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        } finally {
+            Conexao.fecharConexao();
+        }
+    }
 }
