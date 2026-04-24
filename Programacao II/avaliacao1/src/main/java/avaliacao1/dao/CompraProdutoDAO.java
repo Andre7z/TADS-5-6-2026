@@ -14,17 +14,17 @@ public class CompraProdutoDAO {
 
     Connection conn = null;
 
-    public boolean salvar(CompraProduto produto) {
+    public boolean salvar(CompraProduto cp) {
         try {
             conn = Conexao.getConnection();
 
             String sql = "INSERT INTO produto_Compra (id_Compra, id_produto, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setInt(1, produto.getCompra().getId());
-            ps.setInt(2, produto.getProduto().getId());
-            ps.setInt(3, produto.getQuantidade());
-            ps.setDouble(4, produto.getPreco_unit());
+            ps.setInt(1, cp.getCompra().getId());
+            ps.setInt(2, cp.getProduto().getId());
+            ps.setInt(3, cp.getQuantidade());
+            ps.setDouble(4, cp.getPreco_unit());
 
             int qtdeLinhas = ps.executeUpdate();
             ps.close();
@@ -61,16 +61,16 @@ public class CompraProdutoDAO {
         }
     }
 
-    public boolean alterar(CompraProduto produto) {
+    public boolean alterar(CompraProduto cp) {
         try {
             conn = Conexao.getConnection();
 
             String sql = "UPDATE produto_Compra SET quantidade=?, preco_unit=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setInt(1, produto.getQuantidade());
-            ps.setDouble(2, produto.getPreco_unit());
-            ps.setInt(3, produto.getId());
+            ps.setInt(1, cp.getQuantidade());
+            ps.setDouble(2, cp.getPreco_unit());
+            ps.setInt(3, cp.getId());
 
             int qtdeLinhas = ps.executeUpdate();
             ps.close();
@@ -86,7 +86,7 @@ public class CompraProdutoDAO {
 
     public List<CompraProduto> pesquisarTodos() {
         try {
-            List<CompraProduto> compras = new ArrayList<>();
+            List<CompraProduto> cps = new ArrayList<>();
 
             conn = Conexao.getConnection();
 
@@ -114,7 +114,7 @@ public class CompraProdutoDAO {
 
             rs.close();
             ps.close();
-            return compras;
+            return cps;
 
         } catch (Exception e) {
             e.printStackTrace();

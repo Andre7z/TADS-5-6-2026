@@ -36,7 +36,7 @@ public class CategoriaDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "DELETE FROM Categoria WHERE ID = ? ";
+            String sql = "DELETE FROM categoria WHERE ID = ? ";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, id);
