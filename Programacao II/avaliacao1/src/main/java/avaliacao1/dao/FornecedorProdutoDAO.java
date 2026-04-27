@@ -16,7 +16,7 @@ public class FornecedorProdutoDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "INSERT INTO fornecedor_produto (id_fornecedor, id_produto) VALUES (?, ?)";
+            String sql = "INSERT INTO fornecedor_produto (fornecedor_id, produto_id) VALUES (?, ?)";
 
             PreparedStatement ps = conn.prepareStatement(sql);
 

@@ -4,19 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import avaliacao1.model.ProdutoVenda;
+import avaliacao1.model.VendaProduto;
 import avaliacao1.model.Produto;
 import avaliacao1.model.Venda;
 
-public class ProdutoVendaDAO {
+public class VendaProdutoDAO {
 
     Connection conn = null;
 
-    public boolean salvar(ProdutoVenda produto) {
+    public boolean salvar(VendaProduto produto) {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "INSERT INTO produto_venda (id_venda, id_produto, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, produto.getVenda().getId());
@@ -42,7 +42,7 @@ public class ProdutoVendaDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "DELETE FROM produto_venda WHERE id=?";
+            String sql = "DELETE FROM venda_produto WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, id);
@@ -62,11 +62,11 @@ public class ProdutoVendaDAO {
     }
 
 
-    public boolean alterar(ProdutoVenda produto) {
+    public boolean alterar(VendaProduto produto) {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "UPDATE produto_venda SET quantidade=?, preco_unit=? WHERE id=?";
+            String sql = "UPDATE venda_produto SET quantidade=?, preco_unit=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, produto.getQuantidade());
@@ -87,13 +87,13 @@ public class ProdutoVendaDAO {
         }
     }
 
-    public ProdutoVenda pesquisar(int id) {
-        ProdutoVenda produto = null;
+    public VendaProduto pesquisar(int id) {
+        VendaProduto produto = null;
 
         try {
             conn = Conexao.getConnection();
 
-            String sql = "SELECT * FROM produto_venda WHERE id=?";
+            String sql = "SELECT * FROM venda_produto WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, id);
@@ -101,17 +101,17 @@ public class ProdutoVendaDAO {
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {
-                produto = new ProdutoVenda();
+                produto = new VendaProduto();
 
                 produto.setId(rs.getInt("id"));
                 produto.setQuantidade(rs.getInt("quantidade"));
                 produto.setPreco_unit(rs.getDouble("preco_unit"));
 
                 Produto p = new Produto();
-                p.setId(rs.getInt("id_produto"));
+                p.setId(rs.getInt("produto_id"));
 
                 Venda v = new Venda();
-                v.setId(rs.getInt("id_venda"));
+                v.setId(rs.getInt("venda_id"));
 
                 produto.setProduto(p);
                 produto.setVenda(v);

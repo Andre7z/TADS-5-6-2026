@@ -18,7 +18,7 @@ public class CompraProdutoDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "INSERT INTO produto_Compra (id_Compra, id_produto, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO compra_produto (compra_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, cp.getCompra().getId());
@@ -41,7 +41,7 @@ public class CompraProdutoDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "DELETE FROM produto_Compra WHERE id=?";
+            String sql = "DELETE FROM compra_produto WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, id);
@@ -65,7 +65,7 @@ public class CompraProdutoDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "UPDATE produto_Compra SET quantidade=?, preco_unit=? WHERE id=?";
+            String sql = "UPDATE compra_produto SET quantidade=?, preco_unit=? WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, cp.getQuantidade());
@@ -90,7 +90,7 @@ public class CompraProdutoDAO {
 
             conn = Conexao.getConnection();
 
-            String sql = "SELECT * FROM produto_Compra WHERE id=?";
+            String sql = "SELECT * FROM compra_produto WHERE id=?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ResultSet rs = ps.executeQuery();
@@ -103,10 +103,10 @@ public class CompraProdutoDAO {
                 cp.setPreco_unit(rs.getDouble("preco_unit"));
 
                 Produto p = new Produto();
-                p.setId(rs.getInt("id_produto"));
+                p.setId(rs.getInt("produto_id"));
 
                 Compra c = new Compra();
-                c.setId(rs.getInt("id_Compra"));
+                c.setId(rs.getInt("compra_id"));
 
                 cp.setProduto(p);
                 cp.setCompra(c);

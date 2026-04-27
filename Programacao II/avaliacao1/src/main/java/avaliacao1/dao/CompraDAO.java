@@ -23,7 +23,7 @@ public class CompraDAO {
                 return false;
             }
 
-            String sql = "INSERT INTO compra (data_Compra, valor_total, Fornecedor_id) VALUES (?, ?, ?)";
+            String sql = "INSERT INTO compra (data_compra, valor_total, fornecedor_id) VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setDate(1, java.sql.Date.valueOf(compra.getData_compra()));
@@ -69,7 +69,7 @@ public class CompraDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "UPDATE compra SET data_Compra = ?, valor_total = ?, Fornecedor_id = ? WHERE id = ?";
+            String sql = "UPDATE compra SET data_compra = ?, valor_total = ?, fornecedor_id = ? WHERE id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setDate(1, java.sql.Date.valueOf(compra.getData_compra()));
@@ -133,7 +133,7 @@ public class CompraDAO {
             conn = Conexao.getConnection();
             System.out.println("Conectado com sucesso!");
 
-            String sql = "SELECT COUNT(*) AS total FROM compra WHERE Fornecedor_id = ?";
+            String sql = "SELECT COUNT(*) AS total FROM compra WHERE fornecedor_id = ?";
             PreparedStatement ps = conn.prepareStatement(sql);
 
             ps.setInt(1, fornecedorId);

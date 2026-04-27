@@ -6,7 +6,7 @@ import avaliacao1.dao.VendaDAO;
 import avaliacao1.dao.ProdutoDAO;
 import avaliacao1.model.Venda;
 import avaliacao1.model.Produto;
-import avaliacao1.model.ProdutoVenda;
+import avaliacao1.model.VendaProduto;
 
 public class VendaController {
 
@@ -36,7 +36,7 @@ public class VendaController {
             return false;
         }
 
-        for (ProdutoVenda pv : venda.getprodutos()) {
+        for (VendaProduto pv : venda.getprodutos()) {
 
             Produto produto = produtoDAO.pesquisar(pv.getProduto().getId());
 
@@ -49,7 +49,7 @@ public class VendaController {
             }
         }
 
-        for (ProdutoVenda pv : venda.getprodutos()) {
+        for (VendaProduto pv : venda.getprodutos()) {
 
             Produto produto = produtoDAO.pesquisar(pv.getProduto().getId());
 
@@ -66,7 +66,7 @@ public class VendaController {
 
     public boolean verificaEstoque(Venda venda) {
 
-        for (ProdutoVenda pv : venda.getprodutos()) {
+        for (VendaProduto pv : venda.getprodutos()) {
 
             Produto produto = produtoDAO.pesquisar(pv.getProduto().getId());
 

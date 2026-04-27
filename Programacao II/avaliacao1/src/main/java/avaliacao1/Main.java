@@ -10,7 +10,7 @@ import avaliacao1.dao.*;
 
 public class Main {
     public static void main(String[] args) {
-
+ 
         VendaController vendaController = new VendaController();
         ProdutoController produtoController = new ProdutoController();
         CompraController compraController = new CompraController();
@@ -38,14 +38,14 @@ public class Main {
         // fornecedor produto
         FornecedorProdutoDAO fornecedorProdutoDAO = new FornecedorProdutoDAO();
         FornecedorProduto fp1 = new FornecedorProduto(1, fornecedor1, produto1);
-        fornecedorProdutoDAO.salvar(fp1); // corrigido (estava salvando fornecedor errado)
+        fornecedorProdutoDAO.salvar(fp1);
 
         // compra
         CompraDAO compraDAO = new CompraDAO();
         Compra compra1 = new Compra(1, LocalDate.now(), 0.0, fornecedor1);
         compraDAO.salvar(compra1);
 
-        // item da compra
+        // Produto da compra
         CompraProdutoDAO compraProdutoDAO = new CompraProdutoDAO();
         CompraProduto cp1 = new CompraProduto(1, produto1, compra1, 5, 3000.00);
         compraProdutoDAO.salvar(cp1);
@@ -66,8 +66,8 @@ public class Main {
         vendaDAO.salvar(venda1);
 
         // item da venda
-        ProdutoVendaDAO produtoVendaDAO = new ProdutoVendaDAO();
-        ProdutoVenda vp1 = new ProdutoVenda(1, venda1, produto1, 2, 3000.00);
+        VendaProdutoDAO vendaProdutoDAO = new VendaProdutoDAO();
+        VendaProduto vp1 = new VendaProduto(1, venda1, produto1, 2, 3000.00);
 
         if (produtoController.verificaEstoqueExistente(vp1.getProduto())) {
             System.out.println("Produto 1 ok");
@@ -75,18 +75,16 @@ public class Main {
             System.out.println("Produto 1 sem estoque");
         }
 
-        produtoVendaDAO.salvar(vp1); // estava faltando salvar o item
+        vendaProdutoDAO.salvar(vp1); // estava faltando salvar o item
 
-        List<ProdutoVenda> vendaProdutos = new ArrayList<>();
+        List<VendaProduto> vendaProdutos = new ArrayList<>();
         vendaProdutos.add(vp1);
         venda1.setprodutos(vendaProdutos);
 
         // atualiza produto (venda)
         produto1.setQtde_estoque(produto1.getQtde_estoque() - vp1.getQuantidade());
         produto1.setValor_ultima_venda(vp1.getPreco_unit());
-        produtoDAO.alterar(produto1); // importante
+        produtoDAO.alterar(produto1);
 
-        // pode manter controller ou não, mas já salvou direto
-        vendaController.salvar(venda1);
     }
 }

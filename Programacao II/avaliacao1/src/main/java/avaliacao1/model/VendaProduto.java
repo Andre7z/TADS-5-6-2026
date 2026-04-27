@@ -1,6 +1,6 @@
 package avaliacao1.model;
 
-public class ProdutoVenda {
+public class VendaProduto {
     private int id;
     private Venda venda;
     private Produto produto;
@@ -37,9 +37,9 @@ public class ProdutoVenda {
         this.preco_unit = preco_unit;
     }
 
-    public ProdutoVenda(){}
+    public VendaProduto(){}
 
-    public ProdutoVenda(int id, Venda venda, Produto produto, int quantidade, double preco_unit) {
+    public VendaProduto(int id, Venda venda, Produto produto, int quantidade, double preco_unit) {
         this.id = id;
         this.venda = venda;
         this.produto = produto;

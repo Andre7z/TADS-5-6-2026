@@ -1,7 +1,7 @@
 package avaliacao1.dao;
 
 import avaliacao1.model.Venda;
-import avaliacao1.model.ProdutoVenda;
+import avaliacao1.model.VendaProduto;
 import avaliacao1.model.Cliente;
 
 import java.sql.Connection;
@@ -37,7 +37,7 @@ public class VendaDAO {
             rs.close();
             psVenda.close();
 
-            for (ProdutoVenda pv : venda.getprodutos()) {
+            for (VendaProduto pv : venda.getprodutos()) {
                 String sqlItem = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
                 PreparedStatement psItem = conn.prepareStatement(sqlItem);
 
@@ -108,7 +108,7 @@ public class VendaDAO {
             psDelete.executeUpdate();
             psDelete.close();
 
-            for (ProdutoVenda pv : venda.getprodutos()) {
+            for (VendaProduto pv : venda.getprodutos()) {
                 String sqlItem = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
                 PreparedStatement psItem = conn.prepareStatement(sqlItem);
 

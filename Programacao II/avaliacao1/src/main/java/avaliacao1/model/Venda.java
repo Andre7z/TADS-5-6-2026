@@ -7,7 +7,7 @@ public class Venda {
     private int id;
     private LocalDate data_venda;
     private double valor_total;
-    private List<ProdutoVenda> produtos;
+    private List<VendaProduto> produtos;
     private Cliente cliente;
 
 
@@ -30,10 +30,10 @@ public class Venda {
     public void setValor_total(double valor_total) {
         this.valor_total = valor_total;
     }
-    public List<ProdutoVenda> getprodutos() {
+    public List<VendaProduto> getprodutos() {
         return produtos;
     }
-    public void setprodutos(List<ProdutoVenda> produtos) {
+    public void setprodutos(List<VendaProduto> produtos) {
         this.produtos = produtos;
     }
     public Cliente getCliente() {
