@@ -1,5 +1,4 @@
 package avaliacao1.model;
-import java.util.List;
 
 public class Produto {
     private int id;
@@ -7,7 +6,6 @@ public class Produto {
     private double preco_medio;
     private double qtde_estoque;
     private Categoria categoria;
-    private List<FornecedorProduto> fornecedores;
     private double valor_ultima_compra;
     private double valor_ultima_venda;
 
@@ -41,12 +39,6 @@ public class Produto {
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
-    public List<FornecedorProduto> getFornecedores() {
-        return fornecedores;
-    }
-    public void setFornecedores(List<FornecedorProduto> fornecedores) {
-        this.fornecedores = fornecedores;
-    }
     public double getValor_ultima_compra() {
         return valor_ultima_compra;
     }
@@ -61,14 +53,12 @@ public class Produto {
     }
 
     public Produto(){}
-    public Produto(int id, String nome, double preco_medio, double qtde_estoque, Categoria categoria,
-            List<FornecedorProduto> fornecedores, double valor_ultima_compra, double valor_ultima_venda) {
+    public Produto(int id, String nome, double preco_medio, double qtde_estoque, Categoria categoria, double valor_ultima_compra, double valor_ultima_venda) {
         this.id = id;
         this.nome = nome;
         this.preco_medio = preco_medio;
         this.qtde_estoque = qtde_estoque;
         this.categoria = categoria;
-        this.fornecedores = fornecedores;
         this.valor_ultima_compra = valor_ultima_compra;
         this.valor_ultima_venda = valor_ultima_venda;
     }

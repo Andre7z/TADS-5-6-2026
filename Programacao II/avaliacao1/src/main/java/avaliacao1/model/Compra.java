@@ -40,13 +40,11 @@ public class Compra {
     }
 
     public Compra(){}
-    public Compra(int id, LocalDate data_compra, double valor_total, Fornecedor fornecedor,
-            List<CompraProduto> produtos) {
+    public Compra(int id, LocalDate data_compra, double valor_total, Fornecedor fornecedor) {
         this.id = id;
         this.data_compra = data_compra;
         this.valor_total = valor_total;
         this.fornecedor = fornecedor;
-        this.produtos = produtos;
     }
    
 }

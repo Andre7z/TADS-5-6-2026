@@ -44,11 +44,10 @@ public class Venda {
     }
     
     public Venda() {}
-    public Venda(int id, LocalDate data_venda, double valor_total, List<ProdutoVenda> produtos, Cliente cliente) {
+    public Venda(int id, LocalDate data_venda, double valor_total, Cliente cliente) {
         this.id = id;
         this.data_venda = data_venda;
         this.valor_total = valor_total;
-        this.produtos = produtos;
         this.cliente = cliente;
     }
     
