@@ -17,12 +17,6 @@ public class CompraDAO {
         try {
             conn = Conexao.getConnection();
 
-            //valida quantidade de Compras do Fornecedor
-            if (!verificaQtdeCompras(compra.getFornecedor().getId())) {
-                System.out.println("Fornecedor já atingiu o limite de Compras!");
-                return false;
-            }
-
             String sql = "INSERT INTO compra (data_compra, valor_total, fornecedor_id) VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -127,35 +121,4 @@ public class CompraDAO {
             Conexao.fecharConexao();
         }
     }
-
-    public boolean verificaQtdeCompras(int fornecedorId) {
-        try {
-            conn = Conexao.getConnection();
-            System.out.println("Conectado com sucesso!");
-
-            String sql = "SELECT COUNT(*) AS total FROM compra WHERE fornecedor_id = ?";
-            PreparedStatement ps = conn.prepareStatement(sql);
-
-            ps.setInt(1, fornecedorId);
-
-            ResultSet rs = ps.executeQuery();
-
-            int qtdeCompras = 0;
-
-            if (rs.next()) {
-                qtdeCompras = rs.getInt("total");
-            }
-
-            rs.close();
-            ps.close();
-
-            return qtdeCompras < 3;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            Conexao.fecharConexao();
-        }
-    }
-} 
+}
