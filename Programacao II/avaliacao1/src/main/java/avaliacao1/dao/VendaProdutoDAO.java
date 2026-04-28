@@ -8,6 +8,7 @@ import avaliacao1.model.VendaProduto;
 import avaliacao1.model.Produto;
 import avaliacao1.model.Venda;
 
+// Nesse caso o main não utilizará esse código, já está no VendaDAO
 public class VendaProdutoDAO {
 
     Connection conn = null;

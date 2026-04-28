@@ -37,6 +37,7 @@ public class VendaDAO {
             rs.close();
             psVenda.close();
 
+            // Venda Produto
             for (VendaProduto vp : venda.getprodutos()) {
                 String sqlItem = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
                 PreparedStatement psItem = conn.prepareStatement(sqlItem);

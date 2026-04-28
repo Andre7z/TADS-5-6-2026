@@ -22,26 +22,4 @@ public class ProdutoController {
         return produtoDAO.pesquisar(id);
     }
 
-    public boolean atualizarEstoque(Produto produto, int quantidade) {
-        Produto produtoExistente = produtoDAO.pesquisar(produto.getId());
-        if (produtoExistente == null) {
-            return false;
-        }
-
-        return produtoDAO.atualizarEstoque(produto, quantidade);
-    }
-
-    public boolean verificaEstoqueExistente(Produto produto) {
-        Produto produtoExistente = produtoDAO.pesquisar(produto.getId());
-        if (produtoExistente == null) {
-            return false;
-        }
-
-        if (produtoExistente.getQtde_estoque() >= 1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
 }

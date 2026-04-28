@@ -39,7 +39,7 @@ public boolean salvar(Compra compra) {
         rs.close();
         psCompra.close();
 
-        // salva itens da compra
+        // CompraProduto
         for (CompraProduto cp : compra.getProdutos()) {
 
             String sqlItem = "INSERT INTO compra_produto (compra_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";

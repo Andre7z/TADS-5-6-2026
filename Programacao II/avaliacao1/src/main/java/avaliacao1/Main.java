@@ -34,39 +34,46 @@ public class Main {
 
         // produto
         Produto produto1 = new Produto(1, "Notebook", 0.0, 0, categoria1, 0.0, 0.0);
-        System.out.println("Produto:" + produtoController.salvar(produto1));
+        System.out.println("Produto1:" + produtoController.salvar(produto1));
+        
+        Produto produto2 = new Produto(2, "Celular", 0.0, 0, categoria1, 0.0, 0.0);
+        System.out.println("Produto2:" + produtoController.salvar(produto2));
 
         // fornecedor produto
         FornecedorProduto fp1 = new FornecedorProduto(1, fornecedor1, produto1);
-        System.out.println("FornecedorProduto:" + fornecedorProdutoController.salvar(fp1));
+        System.out.println("FornecedorProduto1:" + fornecedorProdutoController.salvar(fp1));
 
-        // compra (aumenta estoque)
+        FornecedorProduto fp2 = new FornecedorProduto(2, fornecedor1, produto2);
+        System.out.println("FornecedorProduto2:" + fornecedorProdutoController.salvar(fp2));
+
+        // compra1
         Compra compra1 = new Compra(1, LocalDate.now(), 0.0, fornecedor1);
 
         CompraProduto cp1 = new CompraProduto(1, produto1, compra1, 7, 3000.00);
 
-        List<CompraProduto> listaCompra = new ArrayList<>();
-        listaCompra.add(cp1);
+        List<CompraProduto> listaCompra1 = new ArrayList<>();
+        listaCompra1.add(cp1);
 
-        compra1.setProdutos(listaCompra);
+        compra1.setProdutos(listaCompra1);
 
         System.out.println("Compra: " + compraController.salvar(compra1));
 
-        //         // compra (aumenta estoque) teste
-        // Compra compra2 = new Compra(2, LocalDate.now(), 0.0, fornecedor1);
+        // compra2
+        Compra compra2 = new Compra(2, LocalDate.now(), 0.0, fornecedor1);
 
-        // CompraProduto cp2 = new CompraProduto(2, produto1, compra2, 7, 3500.00);
+        CompraProduto cp2 = new CompraProduto(2, produto2, compra2, 7, 2500.00);
 
-        // listaCompra.add(cp2);
+        List<CompraProduto> listaCompra2 = new ArrayList<>();
+        listaCompra2.add(cp2);
 
-        // compra2.setProdutos(listaCompra);
+        compra2.setProdutos(listaCompra2);
 
-        // System.out.println("Compra2: " + compraController.salvar(compra2));
+        System.out.println("Compra2: " + compraController.salvar(compra2));
 
         // venda 1
-        Venda venda1 = new Venda(1, LocalDate.now(), 6000.0, cliente1);
+        Venda venda1 = new Venda(1, LocalDate.now(), 0.0, cliente1);
 
-        VendaProduto vp1 = new VendaProduto(1, venda1, produto1, 2, 3000.00);
+        VendaProduto vp1 = new VendaProduto(1, venda1, produto1, 2, 4300.00);
 
         List<VendaProduto> listaVenda1 = new ArrayList<>();
         listaVenda1.add(vp1);
@@ -76,9 +83,9 @@ public class Main {
         System.out.println("Venda 1: " + vendaController.salvar(venda1));
 
         // venda 2
-        Venda venda2 = new Venda(2, LocalDate.now(), 6000.0, cliente1);
+        Venda venda2 = new Venda(2, LocalDate.now(), 0.0, cliente1);
 
-        VendaProduto vp2 = new VendaProduto(2, venda2, produto1, 2, 3000.00);
+        VendaProduto vp2 = new VendaProduto(2, venda2, produto1, 2, 4400.00);
 
         List<VendaProduto> listaVenda2 = new ArrayList<>();
         listaVenda2.add(vp2);
@@ -88,24 +95,26 @@ public class Main {
         System.out.println("Venda 2: " + vendaController.salvar(venda2));
 
         // venda 3
-        Venda venda3 = new Venda(3, LocalDate.now(), 6000.0, cliente1);
+        Venda venda3 = new Venda(3, LocalDate.now(), 0.0, cliente1);
 
-        VendaProduto vp3 = new VendaProduto(3, venda3, produto1, 3, 3000.00);
+        VendaProduto vp3 = new VendaProduto(3, venda3, produto1, 1, 4500.00);
+        VendaProduto vp4 = new VendaProduto(4, venda3, produto2, 2, 3600.00); //Segundo item
 
         List<VendaProduto> listaVenda3 = new ArrayList<>();
         listaVenda3.add(vp3);
+        listaVenda3.add(vp4); // vp do segundo item
 
         venda3.setprodutos(listaVenda3);
 
         System.out.println("Venda 3: " + vendaController.salvar(venda3));
 
-        // venda 4 (deve bloquear)
-        Venda venda4 = new Venda(4, LocalDate.now(), 6000.0, cliente1);
+        // venda 4 (bloquear)
+        Venda venda4 = new Venda(4, LocalDate.now(), 0.0, cliente1);
 
-        VendaProduto vp4 = new VendaProduto(4, venda4, produto1, 1, 3000.00);
+        VendaProduto vp5 = new VendaProduto(5, venda4, produto1, 1, 4500.00);
 
         List<VendaProduto> listaVenda4 = new ArrayList<>();
-        listaVenda4.add(vp4);
+        listaVenda4.add(vp5);
 
         venda4.setprodutos(listaVenda4);
 

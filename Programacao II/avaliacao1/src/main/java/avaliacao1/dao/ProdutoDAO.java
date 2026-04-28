@@ -169,15 +169,4 @@ public class ProdutoDAO {
         }
     }
 
-    
-    public boolean atualizarEstoque(Produto produto, int quantidade) {
-        Produto produtoExistente = pesquisar(produto.getId());
-        if (produtoExistente == null) {
-            return false;
-        }
-
-        double novaQuantidade = produtoExistente.getQtde_estoque() - quantidade;
-        produto.setQtde_estoque(novaQuantidade);
-        return alterar(produto);
-    }
 }
