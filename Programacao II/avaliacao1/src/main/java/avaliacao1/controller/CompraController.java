@@ -1,30 +1,72 @@
 package avaliacao1.controller;
 
 import java.util.List;
+
 import avaliacao1.model.Compra;
+import avaliacao1.model.CompraProduto;
+import avaliacao1.model.Produto;
 import avaliacao1.dao.CompraDAO;
+import avaliacao1.dao.CompraProdutoDAO;
 import avaliacao1.dao.ProdutoDAO;
-
-
 
 public class CompraController {
 
-    CompraDAO CompraDAO = new CompraDAO();
+    CompraDAO compraDAO = new CompraDAO();
+    CompraProdutoDAO compraProdutoDAO = new CompraProdutoDAO();
     ProdutoDAO produtoDAO = new ProdutoDAO();
 
-    public boolean salvar(Compra Compra) {
-        return CompraDAO.salvar(Compra);
+    public boolean salvar(Compra compra) {
+
+        // verifica se tem produtos
+        if (compra.getProdutos() == null || compra.getProdutos().isEmpty()) {
+            return false;
+        }
+
+        // salva compra
+        if (!compraDAO.salvar(compra)) {
+            return false;
+        }
+
+        // salva itens e atualiza produto
+        for (CompraProduto cp : compra.getProdutos()) {
+
+            compraProdutoDAO.salvar(cp);
+
+            Produto produto = produtoDAO.pesquisar(cp.getProduto().getId());
+
+            double estoqueAtual = produto.getQtde_estoque();
+            double precoMedioAtual = produto.getPreco_medio();
+
+            double qtdCompra = cp.getQuantidade();
+            double precoCompra = cp.getPreco_unit();
+
+            // soma estoque
+            double novoEstoque = estoqueAtual + qtdCompra;
+
+            // calcula preco medio
+            double novoPrecoMedio = 
+                ((estoqueAtual * precoMedioAtual) + (qtdCompra * precoCompra)) 
+                / novoEstoque;
+
+            produto.setQtde_estoque(novoEstoque);
+            produto.setValor_ultima_compra(precoCompra);
+            produto.setPreco_medio(novoPrecoMedio);
+
+            produtoDAO.alterar(produto);
+        }
+
+        return true;
     }
 
-    public boolean alterar(Compra Compra) {
-        return CompraDAO.alterar(Compra);
+    public boolean alterar(Compra compra) {
+        return compraDAO.alterar(compra);
     }
 
     public boolean excluir(int id) {
-        return CompraDAO.excluir(id);
+        return compraDAO.excluir(id);
     }
 
     public List<Compra> pesquisarTodos() {
-        return CompraDAO.pesquisarTodos();
+        return compraDAO.pesquisarTodos();
     }
 }

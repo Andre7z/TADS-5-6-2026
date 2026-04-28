@@ -37,14 +37,14 @@ public class VendaDAO {
             rs.close();
             psVenda.close();
 
-            for (VendaProduto pv : venda.getprodutos()) {
+            for (VendaProduto vp : venda.getprodutos()) {
                 String sqlItem = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
                 PreparedStatement psItem = conn.prepareStatement(sqlItem);
 
                 psItem.setInt(1, idVenda);
-                psItem.setInt(2, pv.getProduto().getId());
-                psItem.setInt(3, pv.getQuantidade());
-                psItem.setDouble(4, pv.getPreco_unit());
+                psItem.setInt(2, vp.getProduto().getId());
+                psItem.setInt(3, vp.getQuantidade());
+                psItem.setDouble(4, vp.getPreco_unit());
 
                 psItem.executeUpdate();
                 psItem.close();
@@ -108,14 +108,14 @@ public class VendaDAO {
             psDelete.executeUpdate();
             psDelete.close();
 
-            for (VendaProduto pv : venda.getprodutos()) {
+            for (VendaProduto vp : venda.getprodutos()) {
                 String sqlItem = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
                 PreparedStatement psItem = conn.prepareStatement(sqlItem);
 
                 psItem.setInt(1, venda.getId());
-                psItem.setInt(2, pv.getProduto().getId());
-                psItem.setInt(3, pv.getQuantidade());
-                psItem.setDouble(4, pv.getPreco_unit());
+                psItem.setInt(2, vp.getProduto().getId());
+                psItem.setInt(3, vp.getQuantidade());
+                psItem.setDouble(4, vp.getPreco_unit());
 
                 psItem.executeUpdate();
                 psItem.close();

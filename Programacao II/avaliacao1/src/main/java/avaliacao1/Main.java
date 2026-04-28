@@ -6,85 +6,97 @@ import java.util.List;
 
 import avaliacao1.controller.*;
 import avaliacao1.model.*;
-import avaliacao1.dao.*;
 
 public class Main {
     public static void main(String[] args) {
- 
-        VendaController vendaController = new VendaController();
+
+        // controllers
+        CategoriaController categoriaController = new CategoriaController();
+        ClienteController clienteController = new ClienteController();
+        FornecedorController fornecedorController = new FornecedorController();
         ProdutoController produtoController = new ProdutoController();
+        FornecedorProdutoController fornecedorProdutoController = new FornecedorProdutoController();
         CompraController compraController = new CompraController();
+        VendaController vendaController = new VendaController();
 
         // categoria
-        CategoriaDAO categoriaDAO = new CategoriaDAO();
         Categoria categoria1 = new Categoria(1, "Eletrônicos");
-        categoriaDAO.salvar(categoria1);
+        categoriaController.salvar(categoria1);
 
         // cliente
-        ClienteDAO clienteDAO = new ClienteDAO(); // faltava ;
-        Cliente cliente1 = new Cliente(1, "João", "123", "sim", "Rua 1, Bairro a", "99900-9900");
-        clienteDAO.salvar(cliente1);
+        Cliente cliente1 = new Cliente(1, "João", "123", "sim", "Rua 1", "99999");
+        clienteController.salvar(cliente1);
 
         // fornecedor
-        FornecedorDAO fornecedorDAO = new FornecedorDAO();
-        Fornecedor fornecedor1 = new Fornecedor(1, "Fornecedor A", "111", "11/11002233-7890");
-        fornecedorDAO.salvar(fornecedor1);
+        Fornecedor fornecedor1 = new Fornecedor(1, "Fornecedor A", "111", "11/1111");
+        fornecedorController.salvar(fornecedor1);
 
         // produto
-        ProdutoDAO produtoDAO = new ProdutoDAO();
         Produto produto1 = new Produto(1, "Notebook", 0.0, 0, categoria1, 0.0, 0.0);
-        produtoDAO.salvar(produto1);
+        produtoController.salvar(produto1);
 
         // fornecedor produto
-        FornecedorProdutoDAO fornecedorProdutoDAO = new FornecedorProdutoDAO();
         FornecedorProduto fp1 = new FornecedorProduto(1, fornecedor1, produto1);
-        fornecedorProdutoDAO.salvar(fp1);
+        fornecedorProdutoController.salvar(fp1);
 
-        // compra
-        CompraDAO compraDAO = new CompraDAO();
+        // compra (aumenta estoque)
         Compra compra1 = new Compra(1, LocalDate.now(), 0.0, fornecedor1);
-        compraDAO.salvar(compra1);
 
-        // Produto da compra
-        CompraProdutoDAO compraProdutoDAO = new CompraProdutoDAO();
-        CompraProduto cp1 = new CompraProduto(1, produto1, compra1, 5, 3000.00);
-        compraProdutoDAO.salvar(cp1);
+        CompraProduto cp1 = new CompraProduto(1, produto1, compra1, 50, 3000.00);
 
-        List<CompraProduto> compraProdutos = new ArrayList<>();
-        compraProdutos.add(cp1);
-        compra1.setProdutos(compraProdutos);
+        List<CompraProduto> listaCompra = new ArrayList<>();
+        listaCompra.add(cp1);
 
-        // atualiza produto (compra)
-        produto1.setQtde_estoque(produto1.getQtde_estoque() + cp1.getQuantidade());
-        produto1.setValor_ultima_compra(cp1.getPreco_unit());
-        produto1.setPreco_medio(cp1.getPreco_unit());
-        produtoDAO.alterar(produto1); // importante
+        compra1.setProdutos(listaCompra);
 
-        // venda
-        VendaDAO vendaDAO = new VendaDAO();
-        Venda venda1 = new Venda(1, LocalDate.now(), 60000.00, cliente1);
-        vendaDAO.salvar(venda1);
+        compraController.salvar(compra1);
 
-        // item da venda
-        VendaProdutoDAO vendaProdutoDAO = new VendaProdutoDAO();
+        // venda 1
+        Venda venda1 = new Venda(1, LocalDate.now(), 6000.0, cliente1);
+
         VendaProduto vp1 = new VendaProduto(1, venda1, produto1, 2, 3000.00);
 
-        if (produtoController.verificaEstoqueExistente(vp1.getProduto())) {
-            System.out.println("Produto 1 ok");
-        } else {
-            System.out.println("Produto 1 sem estoque");
-        }
+        List<VendaProduto> listaVenda1 = new ArrayList<>();
+        listaVenda1.add(vp1);
 
-        vendaProdutoDAO.salvar(vp1); // estava faltando salvar o item
+        venda1.setprodutos(listaVenda1);
 
-        List<VendaProduto> vendaProdutos = new ArrayList<>();
-        vendaProdutos.add(vp1);
-        venda1.setprodutos(vendaProdutos);
+        System.out.println("Venda 1: " + vendaController.salvar(venda1));
 
-        // atualiza produto (venda)
-        produto1.setQtde_estoque(produto1.getQtde_estoque() - vp1.getQuantidade());
-        produto1.setValor_ultima_venda(vp1.getPreco_unit());
-        produtoDAO.alterar(produto1);
+        // venda 2
+        Venda venda2 = new Venda(2, LocalDate.now(), 6000.0, cliente1);
 
+        VendaProduto vp2 = new VendaProduto(2, venda2, produto1, 2, 3000.00);
+
+        List<VendaProduto> listaVenda2 = new ArrayList<>();
+        listaVenda2.add(vp2);
+
+        venda2.setprodutos(listaVenda2);
+
+        System.out.println("Venda 2: " + vendaController.salvar(venda2));
+
+        // venda 3
+        Venda venda3 = new Venda(3, LocalDate.now(), 6000.0, cliente1);
+
+        VendaProduto vp3 = new VendaProduto(3, venda3, produto1, 1, 3000.00);
+
+        List<VendaProduto> listaVenda3 = new ArrayList<>();
+        listaVenda3.add(vp3);
+
+        venda3.setprodutos(listaVenda3);
+
+        System.out.println("Venda 3: " + vendaController.salvar(venda3));
+
+        // venda 4 (deve bloquear)
+        Venda venda4 = new Venda(4, LocalDate.now(), 6000.0, cliente1);
+
+        VendaProduto vp4 = new VendaProduto(4, venda4, produto1, 1, 3000.00);
+
+        List<VendaProduto> listaVenda4 = new ArrayList<>();
+        listaVenda4.add(vp4);
+
+        venda4.setprodutos(listaVenda4);
+
+        System.out.println("Venda 4: " + vendaController.salvar(venda4));
     }
 }
