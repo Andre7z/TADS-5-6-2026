@@ -27,6 +27,13 @@ public class VendaController {
 
     public boolean salvar(Venda venda) {
 
+        // calcula valor total
+        double total = 0;
+        for (VendaProduto vp : venda.getprodutos()) {
+            total += vp.getQuantidade() * vp.getPreco_unit();
+        }
+        venda.setValor_total(total);
+
         // verifica se o cliente já comprou 3 vezes
         int totalVendas = vendaDAO.restrigirVendas(venda.getCliente().getCpf());
         if (totalVendas >= 3) {

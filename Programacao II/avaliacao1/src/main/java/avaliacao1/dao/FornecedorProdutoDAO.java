@@ -22,10 +22,7 @@ public class FornecedorProdutoDAO {
 
             ps.setInt(1, fp.getFornecedor().getId());
             ps.setInt(2, fp.getProduto().getId());
-
-            ps.executeUpdate();
-            ps.close();
-
+            
             int qtdeLinhas = ps.executeUpdate();
             ps.close();
             return qtdeLinhas > 0;

@@ -1,6 +1,7 @@
 package avaliacao1.dao;
 
 import avaliacao1.model.Compra;
+import avaliacao1.model.CompraProduto;
 import avaliacao1.model.Fornecedor;
 
 import java.sql.Connection;
@@ -13,29 +14,55 @@ public class CompraDAO {
 
     Connection conn = null;
 
-    public boolean salvar(Compra compra) {
-        try {
-            conn = Conexao.getConnection();
+public boolean salvar(Compra compra) {
+    try {
+        conn = Conexao.getConnection();
 
-            String sql = "INSERT INTO compra (data_compra, valor_total, fornecedor_id) VALUES (?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sql);
+        // salva compra
+        String sqlCompra = "INSERT INTO compra (data_compra, valor_total, fornecedor_id) VALUES (?, ?, ?)";
+        PreparedStatement psCompra = conn.prepareStatement(sqlCompra, PreparedStatement.RETURN_GENERATED_KEYS);
 
-            ps.setDate(1, java.sql.Date.valueOf(compra.getData_compra()));
-            ps.setDouble(2, compra.getValor_total());
-            ps.setInt(3, compra.getFornecedor().getId());
+        psCompra.setDate(1, java.sql.Date.valueOf(compra.getData_compra()));
+        psCompra.setDouble(2, compra.getValor_total());
+        psCompra.setInt(3, compra.getFornecedor().getId());
 
-            int qtdeLinhas = ps.executeUpdate();
-            ps.close();
+        int qtdeLinhas = psCompra.executeUpdate();
 
-            return qtdeLinhas > 0;
+        // pega ID gerado
+        ResultSet rs = psCompra.getGeneratedKeys();
+        int idCompra = 0;
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        } finally {
-            Conexao.fecharConexao();
+        if (rs.next()) {
+            idCompra = rs.getInt(1);
         }
+
+        rs.close();
+        psCompra.close();
+
+        // salva itens da compra
+        for (CompraProduto cp : compra.getProdutos()) {
+
+            String sqlItem = "INSERT INTO compra_produto (compra_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
+            PreparedStatement psItem = conn.prepareStatement(sqlItem);
+
+            psItem.setInt(1, idCompra);
+            psItem.setInt(2, cp.getProduto().getId());
+            psItem.setInt(3, cp.getQuantidade());
+            psItem.setDouble(4, cp.getPreco_unit());
+
+            psItem.executeUpdate();
+            psItem.close();
+        }
+
+        return qtdeLinhas > 0;
+
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
+    } finally {
+        Conexao.fecharConexao();
     }
+}
 
     public boolean excluir(int id) {
         try {

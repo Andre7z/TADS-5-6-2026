@@ -6,13 +6,11 @@ import avaliacao1.model.Compra;
 import avaliacao1.model.CompraProduto;
 import avaliacao1.model.Produto;
 import avaliacao1.dao.CompraDAO;
-import avaliacao1.dao.CompraProdutoDAO;
 import avaliacao1.dao.ProdutoDAO;
 
 public class CompraController {
 
     CompraDAO compraDAO = new CompraDAO();
-    CompraProdutoDAO compraProdutoDAO = new CompraProdutoDAO();
     ProdutoDAO produtoDAO = new ProdutoDAO();
 
     public boolean salvar(Compra compra) {
@@ -22,17 +20,26 @@ public class CompraController {
             return false;
         }
 
-        // salva compra
+        // calcula valor total da compra
+        double total = 0;
+        for (CompraProduto cp : compra.getProdutos()) {
+            total += cp.getQuantidade() * cp.getPreco_unit();
+        }
+        compra.setValor_total(total);
+
+        // salva compra (e itens dentro do DAO)
         if (!compraDAO.salvar(compra)) {
             return false;
         }
 
-        // salva itens e atualiza produto
+        // atualiza produtos (estoque + preço médio)
         for (CompraProduto cp : compra.getProdutos()) {
 
-            compraProdutoDAO.salvar(cp);
-
             Produto produto = produtoDAO.pesquisar(cp.getProduto().getId());
+
+            if (produto == null) {
+                return false;
+            }
 
             double estoqueAtual = produto.getQtde_estoque();
             double precoMedioAtual = produto.getPreco_medio();
@@ -40,13 +47,16 @@ public class CompraController {
             double qtdCompra = cp.getQuantidade();
             double precoCompra = cp.getPreco_unit();
 
-            // soma estoque
+            // novo estoque
             double novoEstoque = estoqueAtual + qtdCompra;
 
-            // calcula preco medio
-            double novoPrecoMedio = 
-                ((estoqueAtual * precoMedioAtual) + (qtdCompra * precoCompra)) 
-                / novoEstoque;
+            // novo preço médio (proteção contra divisão por zero)
+            double novoPrecoMedio = 0;
+            if (novoEstoque > 0) {
+                novoPrecoMedio =
+                        ((estoqueAtual * precoMedioAtual) + (qtdCompra * precoCompra))
+                        / novoEstoque;
+            }
 
             produto.setQtde_estoque(novoEstoque);
             produto.setValor_ultima_compra(precoCompra);
