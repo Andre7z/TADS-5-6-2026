@@ -24,11 +24,11 @@ public class Main {
         System.out.println("Categoria: " + categoriaController.salvar(categoria1));
 
         // cliente
-        Cliente cliente1 = new Cliente(1, "João", "123", "sim", "Rua 1", "99999");
+        Cliente cliente1 = new Cliente(1, "João", "111.222.331-55", "sim", "Rua 1", "99911-2233");
         System.out.println("Cliente: " + clienteController.salvar(cliente1));
 
         // fornecedor
-        Fornecedor fornecedor1 = new Fornecedor(1, "Fornecedor A", "111", "11/1111");
+        Fornecedor fornecedor1 = new Fornecedor(1, "Fornecedor A", "Marca a", "11.222.333/444-55");
         System.out.println("Fornecedor:" + fornecedorController.salvar(fornecedor1));
 
 
@@ -102,7 +102,7 @@ public class Main {
 
         List<VendaProduto> listaVenda3 = new ArrayList<>();
         listaVenda3.add(vp3);
-        listaVenda3.add(vp4); // vp do segundo item
+        listaVenda3.add(vp4); // Segundo item
 
         venda3.setprodutos(listaVenda3);
 

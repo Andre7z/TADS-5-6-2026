@@ -27,12 +27,13 @@ public class VendaDAO {
 
             int qtdeLinhas = psVenda.executeUpdate();
 
-            ResultSet rs = psVenda.getGeneratedKeys();
-            int idVenda = 0;
+            ResultSet rs = psVenda.getGeneratedKeys(); //pega o id que o banco acabou de gerar
+            int idVenda = 0; //incia a váriavel
 
             if (rs.next()) {
                 idVenda = rs.getInt(1);
             }
+            //guarda o id no idVenda
 
             rs.close();
             psVenda.close();
@@ -42,7 +43,7 @@ public class VendaDAO {
                 String sqlItem = "INSERT INTO venda_produto (venda_id, produto_id, quantidade, preco_unit) VALUES (?, ?, ?, ?)";
                 PreparedStatement psItem = conn.prepareStatement(sqlItem);
 
-                psItem.setInt(1, idVenda);
+                psItem.setInt(1, idVenda); // utiliza o id que o banco gerou
                 psItem.setInt(2, vp.getProduto().getId());
                 psItem.setInt(3, vp.getQuantidade());
                 psItem.setDouble(4, vp.getPreco_unit());
@@ -173,11 +174,11 @@ public class VendaDAO {
         try {
             conn = Conexao.getConnection();
 
-            String sql = "SELECT COUNT(*) FROM venda v " +
-                         "INNER JOIN cliente c ON v.cliente_id = c.id " +
-                         "WHERE c.cpf = ? " +
-                         "AND EXTRACT(MONTH FROM v.data_venda) = EXTRACT(MONTH FROM CURRENT_DATE) " +
-                         "AND EXTRACT(YEAR FROM v.data_venda) = EXTRACT(YEAR FROM CURRENT_DATE)";
+            String sql = "SELECT COUNT(*) FROM venda v " + //quantas vendas existem
+                         "INNER JOIN cliente c ON v.cliente_id = c.id " + // liga venda com o cliente
+                         "WHERE c.cpf = ? " + //filtra pelo CPF passado
+                         "AND EXTRACT(MONTH FROM v.data_venda) = EXTRACT(MONTH FROM CURRENT_DATE) " + //pega somente do mês atual
+                         "AND EXTRACT(YEAR FROM v.data_venda) = EXTRACT(YEAR FROM CURRENT_DATE)"; //garante que é desse ano
 
             PreparedStatement ps = conn.prepareStatement(sql);
 
@@ -189,7 +190,7 @@ public class VendaDAO {
                 int total = rs.getInt(1);
                 rs.close();
                 ps.close();
-                return total;
+                return total; //retorna quantidade total de vendas naquele cpf
             }
 
             rs.close();

@@ -22,20 +22,20 @@ public class CompraController {
 
         // calcula valor total da compra
         double total = 0;
-        for (CompraProduto cp : compra.getProdutos()) {
+        for (CompraProduto cp : compra.getProdutos()) { //Percorre todos os itens da compra
             total += cp.getQuantidade() * cp.getPreco_unit();
         }
         compra.setValor_total(total);
 
         // salva compra (e itens dentro do DAO)
         if (!compraDAO.salvar(compra)) {
-            return false;
+            return false; //caso errado return false
         }
 
         // atualiza produtos (estoque + preço médio)
-        for (CompraProduto cp : compra.getProdutos()) {
+        for (CompraProduto cp : compra.getProdutos()) { //percorre cada produto da compra
 
-            Produto produto = produtoDAO.pesquisar(cp.getProduto().getId());
+            Produto produto = produtoDAO.pesquisar(cp.getProduto().getId()); //busca o produto no banco
 
             if (produto == null) {
                 return false;
@@ -47,10 +47,10 @@ public class CompraController {
             double qtdCompra = cp.getQuantidade();
             double precoCompra = cp.getPreco_unit();
 
-            // novo estoque
+            // atualiza estoque
             double novoEstoque = estoqueAtual + qtdCompra;
 
-            // novo preço médio (proteção contra divisão por zero)
+            // novo preço médio
             double novoPrecoMedio = 0;
             if (novoEstoque > 0) {
                 novoPrecoMedio =
@@ -58,10 +58,10 @@ public class CompraController {
                         / novoEstoque;
             }
 
+            //atualiza no bd
             produto.setQtde_estoque(novoEstoque);
-            produto.setValor_ultima_compra(precoCompra);
-            produto.setPreco_medio(novoPrecoMedio);
-
+            produto.setValor_ultima_compra(precoCompra); 
+            produto.setPreco_medio(novoPrecoMedio); 
             produtoDAO.alterar(produto);
         }
 

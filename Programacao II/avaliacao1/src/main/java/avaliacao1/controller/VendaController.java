@@ -29,7 +29,7 @@ public class VendaController {
 
         // calcula valor total
         double total = 0;
-        for (VendaProduto vp : venda.getprodutos()) {
+        for (VendaProduto vp : venda.getprodutos()) { //percorre todos os produtos da venda
             total += vp.getQuantidade() * vp.getPreco_unit();
         }
         venda.setValor_total(total);
@@ -41,26 +41,26 @@ public class VendaController {
         }
 
         // verifica estoque
-        for (VendaProduto vp : venda.getprodutos()) {
+        for (VendaProduto vp : venda.getprodutos()) { //percorre todos os itens da venda
 
-            Produto produto = produtoDAO.pesquisar(vp.getProduto().getId());
+            Produto produto = produtoDAO.pesquisar(vp.getProduto().getId()); //busca o produto no banco
 
             if (produto == null) return false;
 
-            if (produto.getQtde_estoque() < vp.getQuantidade()) {
+            if (produto.getQtde_estoque() < vp.getQuantidade()) { //Verifica se tem a quantidade o cliente quer
                 return false;
             }
         }
 
         // atualiza estoque e ultima venda
-        for (VendaProduto vp : venda.getprodutos()) {
+        for (VendaProduto vp : venda.getprodutos()) { //percorre todos os itens da venda
 
-            Produto produto = produtoDAO.pesquisar(vp.getProduto().getId());
+            Produto produto = produtoDAO.pesquisar(vp.getProduto().getId()); //busca o produto no banco
 
-            produto.setQtde_estoque(produto.getQtde_estoque() - vp.getQuantidade());
-            produto.setValor_ultima_venda(vp.getPreco_unit());
+            produto.setQtde_estoque(produto.getQtde_estoque() - vp.getQuantidade()); //diminui o estoque
+            produto.setValor_ultima_venda(vp.getPreco_unit()); //guarda o último preço que foi vendido
 
-            produtoDAO.alterar(produto);
+            produtoDAO.alterar(produto); //atualiza produto
         }
 
         // salva venda
